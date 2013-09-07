@@ -3,7 +3,8 @@ jQuery.fn.wowscroll = function(options) {
 
 	WowScrollObj.init(options);
 	WowScrollObj.build(this);
-	WowScrollObj.draw_thumb();
+	WowScrollObj.drawThumb();
+	WowScrollObj.setEvents();
 }
 
 function inherit(proto) {
@@ -17,7 +18,7 @@ var WowScroll = {
 	wheel: 40,
 	scroll: true,
 	size: "auto",
-	sizethumb: "auto",
+	thumbsize: "auto",
 	hide: true,
 
 	init: function(options) {
@@ -33,23 +34,23 @@ var WowScroll = {
 			contentwrap,
 			scrollbar,
 			axis = self.axis === "x",
-			axis_class;
+			axisClass;
 
-		axis_class = (axis) ? "horizontal" : "vertical";
+		axisClass = (axis) ? "horizontal" : "vertical";
 
 		container.empty();
 		contentwrap = $("<div/>")
 			.addClass("wowscroll-content-wrap")
 			.appendTo(container);
 
-		$("<div/>")
+		contentblock = $("<div/>")
 			.addClass("wowscroll-content")
 			.append(content)
 			.appendTo(contentwrap);
 
 		scrollbar = $("<div/>")
 			.addClass("wowscroll-scrollbar")
-			.addClass(axis_class)
+			.addClass(axisClass)
 			.appendTo(contentwrap);
 
 		track = $("<div/>")
@@ -58,27 +59,87 @@ var WowScroll = {
 
 		this.container = container;
 		this.contentwrap = contentwrap;
+		this.contentblock = contentblock;
 		this.scrollbar = scrollbar;
 	},
 
-	draw_thumb: function() {
+	drawThumb: function() {
 		var self = this,
-			container = this.container,
-			contentwrap = this.contentwrap,
-			scrollbar = this.scrollbar,
+			container = self.container,
+			contentwrap = self.contentwrap,
+			contentblock = self.contentblock,
+			scrollbar = self.scrollbar,
 			track = scrollbar.find(".track"),
 			axis = self.axis === "x",
-			thumb_size;
+			scale,
+			thumbSize;
 
 		if(!axis) {
-			thumb_size = { "height": Math.pow(contentwrap.height(),2)/contentwrap.find(".wowscroll-content").height() ^ 0 };
+			scale = contentwrap.height()/contentblock.height();
+			thumbSize = { "height": scale*contentwrap.height() ^ 0 };
 		} else {
-			thumb_size = { "width": Math.pow(contentwrap.width(),2)/contentwrap.find(".wowscroll-content").width() ^ 0 };
+			scale = contentwrap.width()/contentblock.width();
+			thumbSize = { "width": scale*contentwrap.width() ^ 0 };
 		}
 
 		$("<div/>")
 			.addClass("thumb")
-			.css(thumb_size)
+			.css(thumbSize)
 			.appendTo(track);
+
+		this.scale = scale;
+	},
+
+	setEvents: function() {
+		var self = this,
+			container = self.container,
+			contentwrap = self.contentwrap,
+			contentblock = self.contentblock,
+			scrollbar = self.scrollbar,
+			scale = self.scale,
+			thumb = scrollbar.find(".thumb"),
+			axis = self.axis === "x";
+
+		container[0].addEventListener( 'DOMMouseScroll', wheel, false );
+        container[0].addEventListener( 'mousewheel', wheel, false );
+        container[0].addEventListener( 'MozMousePixelScroll', function( event ){
+            event.preventDefault();
+        }, false);
+
+        function wheel(event){
+        	event.stopImmediatePropagation();
+        	event.preventDefault();
+        	var delta,
+        		prop,
+        		thumbMove = {},
+        		margin,
+        		maxMargin;
+
+        	delta = (axis) ? event.wheelDeltaX : event.wheelDeltaY;
+        	prop = (axis) ? "margin-left" : "margin-top";
+        	margin = parseInt(thumb.css(prop));
+			maxMargin = (axis) ? scrollbar.width()-thumb.width() : scrollbar.height()-thumb.height();
+
+        	thumbMove[prop] = (-delta*scale^0)+margin;
+    		thumbMove[prop] = (thumbMove[prop] > maxMargin) ? maxMargin : thumbMove[prop];
+        	thumbMove[prop] = (thumbMove[prop] > 0) ? thumbMove[prop] : 0;        		
+        	
+        	thumb.css(thumbMove);
+
+        	contentScroll(delta);
+        }
+
+        function contentScroll(delta) {
+        	var prop = (axis) ? "left" : "top",
+        		contentMove = {},
+        		margin = parseInt(contentblock.css(prop))+delta,
+        		maxMargin = (axis) ? contentblock.width()-contentwrap.width() : contentblock.height()-contentwrap.height();
+
+        	margin = (margin < -maxMargin) ? -maxMargin : margin;
+        	margin = (margin < 0) ? margin : 0;
+        	contentMove[prop] = margin;
+
+        	contentblock.css(contentMove);
+        }
 	}
 }

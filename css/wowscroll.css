@@ -23,14 +23,18 @@
 	left: 0;
 }
 
-.vertical .wowscroll-content {
-	margin-right: 8px;
+.wowscroll-content {
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
 }
 
 .wowscroll-scrollbar .track {
 	width: 100%;
 	height: 100%;
 	background: gray;
+	position: absolute;
 }
 
 .wowscroll-scrollbar .thumb {
