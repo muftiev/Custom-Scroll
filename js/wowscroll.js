@@ -41,6 +41,7 @@ var WowScroll = {
 		container.empty();
 		contentwrap = $("<div/>")
 			.addClass("wowscroll-content-wrap")
+			.addClass(axisClass)
 			.appendTo(container);
 
 		contentblock = $("<div/>")
@@ -50,7 +51,6 @@ var WowScroll = {
 
 		scrollbar = $("<div/>")
 			.addClass("wowscroll-scrollbar")
-			.addClass(axisClass)
 			.appendTo(contentwrap);
 
 		track = $("<div/>")
@@ -115,7 +115,8 @@ var WowScroll = {
         		margin,
         		maxMargin;
 
-        	delta = (axis) ? event.wheelDeltaX : event.wheelDeltaY;
+        	//delta = (axis) ? event.wheelDeltaX : event.wheelDeltaY;
+        	delta = event.wheelDelta;
         	prop = (axis) ? "margin-left" : "margin-top";
         	margin = parseInt(thumb.css(prop));
 			maxMargin = (axis) ? scrollbar.width()-thumb.width() : scrollbar.height()-thumb.height();

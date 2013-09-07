@@ -9,14 +9,14 @@
 	position: absolute;
 }
 
-.wowscroll-scrollbar.vertical {
+.vertical>.wowscroll-scrollbar {
 	width: 8px;
 	height: 100%;
 	top: 0;
 	right: 0;
 }
 
-.wowscroll-scrollbar.horizontal {
+.horizontal>.wowscroll-scrollbar {
 	width: 100%;
 	height: 8px;
 	bottom: 0;
@@ -24,10 +24,17 @@
 }
 
 .wowscroll-content {
-	width: 100%;
 	position: absolute;
 	top: 0;
 	left: 0;
+}
+
+.vertical>.wowscroll-content {
+	width: 100%;
+}
+
+.horizontal>.wowscroll-content {
+	height: 100%;
 }
 
 .wowscroll-scrollbar .track {
@@ -41,12 +48,12 @@
 	background: green;
 }
 
-.wowscroll-scrollbar.vertical .thumb {
+.vertical .wowscroll-scrollbar .thumb {
 	width: 8px;
 	height: 0;
 }
 
-.wowscroll-scrollbar.horizontal .thumb {
+.horizontal .wowscroll-scrollbar .thumb {
 	height: 8px;
 	width: 0;
 }
