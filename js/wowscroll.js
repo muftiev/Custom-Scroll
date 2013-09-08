@@ -106,7 +106,38 @@ var WowScroll = {
             event.preventDefault();
         }, false);
 
-        function wheel(event){
+        thumb.bind('mousedown', grab);
+        thumb.bind('mouseup', drag);
+
+        function grab(event) {
+        	var startPosition = axis ? event.pageX : event.pageY;
+
+        	self.startPosition = startPosition;
+
+        	$(document).bind('mousemove', drag);
+            $(document).bind('mouseup', release);
+            thumb.bind('mouseup', release);
+        }
+
+        function drag(event) {
+			var startPosition = self.startPosition,
+				delta = axis ? startPosition-event.pageX : startPosition-event.pageY;
+
+			thumbScroll(delta/scale);
+			contentScroll();
+
+			self.startPosition = axis ? event.pageX : event.pageY;
+        }
+
+        function release(event) {
+        	$(document).unbind('mousemove', drag);
+            $(document).unbind('mouseup', release);
+            thumb.unbind('mouseup', release);
+
+            self.startPosition = null;
+        }
+
+        function wheel(event) {
         	event.stopImmediatePropagation();
         	event.preventDefault();
         	var delta,
@@ -115,25 +146,30 @@ var WowScroll = {
         		margin,
         		maxMargin;
 
-        	//delta = (axis) ? event.wheelDeltaX : event.wheelDeltaY;
-        	delta = event.wheelDelta;
-        	prop = (axis) ? "margin-left" : "margin-top";
-        	margin = parseInt(thumb.css(prop));
-			maxMargin = (axis) ? scrollbar.width()-thumb.width() : scrollbar.height()-thumb.height();
-
-        	thumbMove[prop] = (-delta*scale^0)+margin;
-    		thumbMove[prop] = (thumbMove[prop] > maxMargin) ? maxMargin : thumbMove[prop];
-        	thumbMove[prop] = (thumbMove[prop] > 0) ? thumbMove[prop] : 0;        		
+        	delta = (axis) ? event.wheelDelta : event.wheelDeltaY;        	
         	
-        	thumb.css(thumbMove);
-
-        	contentScroll(delta);
+        	thumbScroll(delta)
+        	contentScroll();
         }
 
-        function contentScroll(delta) {
+        function thumbScroll(delta) {
+        	var prop = (axis) ? "margin-left" : "margin-top";
+        		thumbMove = {},
+        		margin = parseInt(thumb.css(prop))-delta*scale,
+        		maxMargin = (axis) ? scrollbar.width()-thumb.width() : scrollbar.height()-thumb.height();
+
+        	margin = (margin > maxMargin) ? maxMargin : margin;
+        	margin = (margin > 0) ? margin : 0; 
+        	thumbMove[prop] =  margin; 		
+        	
+        	thumb.css(thumbMove);
+        }
+
+        function contentScroll() {
         	var prop = (axis) ? "left" : "top",
+        		thumbProp = (axis) ? "margin-left" : "margin-top",
         		contentMove = {},
-        		margin = parseInt(contentblock.css(prop))+delta,
+        		margin = -parseInt(thumb.css(thumbProp))/scale,
         		maxMargin = (axis) ? contentblock.width()-contentwrap.width() : contentblock.height()-contentwrap.height();
 
         	margin = (margin < -maxMargin) ? -maxMargin : margin;
