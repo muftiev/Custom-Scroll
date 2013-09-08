@@ -57,3 +57,10 @@
 	height: 8px;
 	width: 0;
 }
+
+.unselectable *{
+    -moz-user-select:none;
+    -webkit-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+}

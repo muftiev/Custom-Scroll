@@ -110,6 +110,8 @@ var WowScroll = {
         thumb.bind('mouseup', drag);
 
         function grab(event) {
+        	event.preventDefault();
+
         	var startPosition = axis ? event.pageX : event.pageY;
 
         	self.startPosition = startPosition;
@@ -117,10 +119,12 @@ var WowScroll = {
         	$(document).bind('mousemove', drag);
             $(document).bind('mouseup', release);
             thumb.bind('mouseup', release);
+
+            $("body").addClass("unselectable");
         }
 
         function drag(event) {
-			var startPosition = self.startPosition,
+        	var startPosition = self.startPosition,
 				delta = axis ? startPosition-event.pageX : startPosition-event.pageY;
 
 			thumbScroll(delta/scale);
@@ -135,6 +139,8 @@ var WowScroll = {
             thumb.unbind('mouseup', release);
 
             self.startPosition = null;
+
+            $("body").removeClass("unselectable");
         }
 
         function wheel(event) {
