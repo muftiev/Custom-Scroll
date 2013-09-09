@@ -17,8 +17,6 @@ var WowScroll = {
 	axis: "y",
 	wheel: 40,
 	scroll: true,
-	size: "auto",
-	thumbsize: "auto",
 	hide: true,
 
 	init: function(options) {
@@ -61,6 +59,7 @@ var WowScroll = {
 		this.contentwrap = contentwrap;
 		this.contentblock = contentblock;
 		this.scrollbar = scrollbar;
+		this.axis = axis;
 	},
 
 	drawThumb: function() {
@@ -70,16 +69,16 @@ var WowScroll = {
 			contentblock = self.contentblock,
 			scrollbar = self.scrollbar,
 			track = scrollbar.find(".track"),
-			axis = self.axis === "x",
+			axis = self.axis,
 			scale,
 			thumbSize;
 
 		if(!axis) {
 			scale = contentwrap.height()/contentblock.height();
-			thumbSize = { "height": scale*contentwrap.height() ^ 0 };
+			thumbSize = { "height": scale*scrollbar.height() };
 		} else {
 			scale = contentwrap.width()/contentblock.width();
-			thumbSize = { "width": scale*contentwrap.width() ^ 0 };
+			thumbSize = { "width": scale*scrollbar.width() };
 		}
 
 		$("<div/>")
@@ -98,7 +97,7 @@ var WowScroll = {
 			scrollbar = self.scrollbar,
 			scale = self.scale,
 			thumb = scrollbar.find(".thumb"),
-			axis = self.axis === "x";
+			axis = self.axis;
 
 		container[0].addEventListener( 'DOMMouseScroll', wheel, false );
         container[0].addEventListener( 'mousewheel', wheel, false );
@@ -146,6 +145,7 @@ var WowScroll = {
         function wheel(event) {
         	event.stopImmediatePropagation();
         	event.preventDefault();
+
         	var delta,
         		prop,
         		thumbMove = {},
@@ -161,7 +161,7 @@ var WowScroll = {
         function thumbScroll(delta) {
         	var prop = (axis) ? "margin-left" : "margin-top";
         		thumbMove = {},
-        		margin = parseInt(thumb.css(prop))-delta*scale,
+        		margin = parseInt(thumb.css(prop), 10)-delta*scale,
         		maxMargin = (axis) ? scrollbar.width()-thumb.width() : scrollbar.height()-thumb.height();
 
         	margin = (margin > maxMargin) ? maxMargin : margin;
@@ -175,7 +175,7 @@ var WowScroll = {
         	var prop = (axis) ? "left" : "top",
         		thumbProp = (axis) ? "margin-left" : "margin-top",
         		contentMove = {},
-        		margin = -parseInt(thumb.css(thumbProp))/scale,
+        		margin = -parseInt(thumb.css(thumbProp), 10)/scale,
         		maxMargin = (axis) ? contentblock.width()-contentwrap.width() : contentblock.height()-contentwrap.height();
 
         	margin = (margin < -maxMargin) ? -maxMargin : margin;

@@ -10,7 +10,7 @@
 }
 
 .vertical>.wowscroll-scrollbar {
-	width: 8px;
+	width: 5px;
 	height: 100%;
 	top: 0;
 	right: 0;
@@ -18,7 +18,7 @@
 
 .horizontal>.wowscroll-scrollbar {
 	width: 100%;
-	height: 8px;
+	height: 5px;
 	bottom: 0;
 	left: 0;
 }
@@ -49,12 +49,12 @@
 }
 
 .vertical .wowscroll-scrollbar .thumb {
-	width: 8px;
+	width: 5px;
 	height: 0;
 }
 
 .horizontal .wowscroll-scrollbar .thumb {
-	height: 8px;
+	height: 5px;
 	width: 0;
 }
 
