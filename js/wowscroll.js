@@ -59,7 +59,10 @@ var WowScroll = {
 		this.contentwrap = contentwrap;
 		this.contentblock = contentblock;
 		this.scrollbar = scrollbar;
+		this.track = track;
 		this.axis = axis;
+		this.contentlength = (axis) ? contentblock.width() : contentblock.height();
+		this.viewlength = (axis) ? contentwrap.width() : contentwrap.height();
 	},
 
 	drawThumb: function() {
@@ -68,24 +71,20 @@ var WowScroll = {
 			contentwrap = self.contentwrap,
 			contentblock = self.contentblock,
 			scrollbar = self.scrollbar,
-			track = scrollbar.find(".track"),
+			track = self.track,
 			axis = self.axis,
-			scale,
-			thumbSize;
+			scale = self.viewlength/self.contentlength,
+			thumbSize,
+			thumb
 
-		if(!axis) {
-			scale = contentwrap.height()/contentblock.height();
-			thumbSize = { "height": scale*scrollbar.height() };
-		} else {
-			scale = contentwrap.width()/contentblock.width();
-			thumbSize = { "width": scale*scrollbar.width() };
-		}
+		thumbSize = (axis) ? { "width": scale*scrollbar.width() } : { "height": scale*scrollbar.height() };
 
-		$("<div/>")
+		thumb = $("<div/>")
 			.addClass("thumb")
 			.css(thumbSize)
 			.appendTo(track);
 
+		this.thumb = thumb;
 		this.scale = scale;
 	},
 
@@ -96,7 +95,7 @@ var WowScroll = {
 			contentblock = self.contentblock,
 			scrollbar = self.scrollbar,
 			scale = self.scale,
-			thumb = scrollbar.find(".thumb"),
+			thumb = self.thumb,
 			axis = self.axis;
 
 		container[0].addEventListener( 'DOMMouseScroll', wheel, false );
@@ -108,39 +107,7 @@ var WowScroll = {
         thumb.bind('mousedown', grab);
         thumb.bind('mouseup', drag);
 
-        function grab(event) {
-        	event.preventDefault();
-
-        	var startPosition = axis ? event.pageX : event.pageY;
-
-        	self.startPosition = startPosition;
-
-        	$(document).bind('mousemove', drag);
-            $(document).bind('mouseup', release);
-            thumb.bind('mouseup', release);
-
-            $("body").addClass("unselectable");
-        }
-
-        function drag(event) {
-        	var startPosition = self.startPosition,
-				delta = axis ? startPosition-event.pageX : startPosition-event.pageY;
-
-			thumbScroll(delta/scale);
-			contentScroll();
-
-			self.startPosition = axis ? event.pageX : event.pageY;
-        }
-
-        function release(event) {
-        	$(document).unbind('mousemove', drag);
-            $(document).unbind('mouseup', release);
-            thumb.unbind('mouseup', release);
-
-            self.startPosition = null;
-
-            $("body").removeClass("unselectable");
-        }
+        container.on('mouseenter', updateScroll);
 
         function wheel(event) {
         	event.stopImmediatePropagation();
@@ -154,35 +121,109 @@ var WowScroll = {
 
         	delta = (axis) ? event.wheelDelta : event.wheelDeltaY;        	
         	
-        	thumbScroll(delta)
-        	contentScroll();
+        	self.thumbScroll(delta);
+        	self.contentScroll();
         }
 
-        function thumbScroll(delta) {
-        	var prop = (axis) ? "margin-left" : "margin-top";
-        		thumbMove = {},
-        		margin = parseInt(thumb.css(prop), 10)-delta*scale,
-        		maxMargin = (axis) ? scrollbar.width()-thumb.width() : scrollbar.height()-thumb.height();
+        function grab(event) {
+        	event.preventDefault();
 
-        	margin = (margin > maxMargin) ? maxMargin : margin;
-        	margin = (margin > 0) ? margin : 0; 
-        	thumbMove[prop] =  margin; 		
-        	
-        	thumb.css(thumbMove);
+        	var startPosition = axis ? event.pageX : event.pageY,
+        		thumb = self.thumb;
+
+        	self.startPosition = startPosition;
+
+        	$(document).bind('mousemove', drag);
+            $(document).bind('mouseup', release);
+            thumb.bind('mouseup', release);
+
+            $("body").addClass("unselectable");
         }
 
-        function contentScroll() {
-        	var prop = (axis) ? "left" : "top",
-        		thumbProp = (axis) ? "margin-left" : "margin-top",
-        		contentMove = {},
-        		margin = -parseInt(thumb.css(thumbProp), 10)/scale,
-        		maxMargin = (axis) ? contentblock.width()-contentwrap.width() : contentblock.height()-contentwrap.height();
+        function drag(event) {
+        	var startPosition = self.startPosition,
+        		scale = self.scale,
+				delta = axis ? startPosition-event.pageX : startPosition-event.pageY;
 
-        	margin = (margin < -maxMargin) ? -maxMargin : margin;
-        	margin = (margin < 0) ? margin : 0;
-        	contentMove[prop] = margin;
+			self.thumbScroll(delta/scale);
+			self.contentScroll();
 
-        	contentblock.css(contentMove);
+			self.startPosition = axis ? event.pageX : event.pageY;
         }
-	}
+
+        function release(event) {
+        	var thumb = self.thumb;
+
+        	$(document).unbind('mousemove', drag);
+            $(document).unbind('mouseup', release);
+            thumb.unbind('mouseup', release);
+
+            self.startPosition = null;
+
+            $("body").removeClass("unselectable");
+        }
+
+        function updateScroll(event) {
+	    	event.stopImmediatePropagation();
+
+	    	var contentblock = self.contentblock,
+	    		scrollbar = self.scrollbar,
+	    		viewlength = self.viewlength,
+	    		contentlength = self.contentlength,
+	    		currentlength = (axis) ? contentblock.width() : contentblock.height(),
+	    		thumb = self.thumb,
+	    		scale,
+	    		thumbsize = {};
+
+	    	if(currentlength !== contentlength) {
+	    		scale = viewlength/currentlength;
+	    		thumbSize = (axis) ? { "width": scale*scrollbar.width() } : { "height": scale*scrollbar.height() };
+
+	    		thumb.css(thumbSize);
+
+	    		self.scale = scale;
+	    		self.contentlength = currentlength;
+	    	}    	
+		}
+	},
+
+	thumbScroll: function(delta) {
+    	var self = this,
+    		axis = self.axis,
+    		scrollbar = self.scrollbar,
+    		thumb = self.thumb,
+    		scale = self.scale,
+    		prop = (axis) ? "margin-left" : "margin-top";
+    		thumbMove = {},
+    		margin = parseInt(thumb.css(prop), 10)-delta*scale,
+    		maxMargin = (axis) ? scrollbar.width()-thumb.width() : scrollbar.height()-thumb.height();
+
+    	margin = (margin > maxMargin) ? maxMargin : margin;
+    	margin = (margin > 0) ? margin : 0; 
+    	thumbMove[prop] =  margin; 		
+    	
+    	thumb.css(thumbMove);
+    },
+
+    contentScroll: function () {
+    	var self = this,
+    		axis = self.axis,
+    		contentwrap = self.contentwrap,
+    		contentblock = self.contentblock,
+    		thumb = self.thumb,
+    		scale = self.scale,
+    		prop = (axis) ? "left" : "top",
+    		thumbProp = (axis) ? "margin-left" : "margin-top",
+    		contentMove = {},
+    		margin = -parseInt(thumb.css(thumbProp), 10)/scale,
+    		maxMargin = (axis) ? contentblock.width()-contentwrap.width() : contentblock.height()-contentwrap.height();
+
+    	margin = (margin < -maxMargin) ? -maxMargin : margin;
+    	margin = (margin < 0) ? margin : 0;
+    	contentMove[prop] = margin;
+
+    	contentblock.css(contentMove);
+    }
+
+	
 }

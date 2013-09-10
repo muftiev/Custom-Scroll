@@ -46,6 +46,7 @@
 
 .wowscroll-scrollbar .thumb {
 	background: green;
+	cursor: pointer;
 }
 
 .vertical .wowscroll-scrollbar .thumb {
