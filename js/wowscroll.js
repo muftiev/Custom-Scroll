@@ -15,7 +15,7 @@ function inherit(proto) {
 
 var WowScroll = {
 	axis: "y",
-	wheel: 40,
+	wheel: 120,
 	scroll: true,
 	hide: true,
 
@@ -30,7 +30,9 @@ var WowScroll = {
 			container = target,
 			content = container.html(),
 			contentwrap,
+			contentblock,
 			scrollbar,
+			track,
 			axis = self.axis === "x",
 			axisClass;
 
@@ -50,6 +52,10 @@ var WowScroll = {
 		scrollbar = $("<div/>")
 			.addClass("wowscroll-scrollbar")
 			.appendTo(contentwrap);
+
+		if(self.hide) {
+			scrollbar.addClass("hide");
+		}
 
 		track = $("<div/>")
 			.addClass("track")
@@ -74,8 +80,8 @@ var WowScroll = {
 			track = self.track,
 			axis = self.axis,
 			scale = self.viewlength/self.contentlength,
-			thumbSize,
-			thumb
+			thumbSize = {},
+			thumb;
 
 		thumbSize = (axis) ? { "width": scale*scrollbar.width() } : { "height": scale*scrollbar.height() };
 
@@ -98,12 +104,14 @@ var WowScroll = {
 			thumb = self.thumb,
 			axis = self.axis;
 
-		container[0].addEventListener( 'DOMMouseScroll', wheel, false );
-        container[0].addEventListener( 'mousewheel', wheel, false );
-        container[0].addEventListener( 'MozMousePixelScroll', function( event ){
-            event.preventDefault();
-        }, false);
-
+		if(self.scroll) {
+			container[0].addEventListener('DOMMouseScroll', wheel, false);
+	        container[0].addEventListener('mousewheel', wheel, false);
+	        container[0].addEventListener('MozMousePixelScroll', function(event){
+		            event.preventDefault();
+		        }, false);
+		}
+		
         thumb.bind('mousedown', grab);
         thumb.bind('mouseup', drag);
 
@@ -114,12 +122,9 @@ var WowScroll = {
         	event.preventDefault();
 
         	var delta,
-        		prop,
-        		thumbMove = {},
-        		margin,
-        		maxMargin;
+        		wheel = self.wheel;
 
-        	delta = (axis) ? event.wheelDelta : event.wheelDeltaY;        	
+        	delta = (axis) ? event.wheelDelta*wheel/Math.abs(event.wheelDelta) : event.wheelDeltaY*wheel/Math.abs(event.wheelDeltaY);
         	
         	self.thumbScroll(delta);
         	self.contentScroll();
@@ -138,6 +143,7 @@ var WowScroll = {
             thumb.bind('mouseup', release);
 
             $("body").addClass("unselectable");
+            scrollbar.css("opacity", 1);
         }
 
         function drag(event) {
@@ -161,6 +167,7 @@ var WowScroll = {
             self.startPosition = null;
 
             $("body").removeClass("unselectable");
+            scrollbar.css("opacity", "");
         }
 
         function updateScroll(event) {
