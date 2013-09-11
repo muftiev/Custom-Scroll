@@ -5,19 +5,23 @@ jQuery.fn.wowscroll = function(options) {
 	WowScrollObj.build(this);
 	WowScrollObj.drawThumb();
 	WowScrollObj.setEvents();
+
+	function inherit(proto) {
+		function F() {}
+		F.prototype = proto;
+		return new F;
+	}
 }
 
-function inherit(proto) {
-  function F() {}
-  F.prototype = proto;
-  return new F;
-}
+
 
 var WowScroll = {
 	axis: "y",
-	wheel: 120,
-	scroll: true,
+	wheelSense: 120,
+	wheelEnabled: true,
 	hide: true,
+	scrollbarSize: "auto",
+	scrollbarScale: 1,
 
 	init: function(options) {
 		for (var prop in options) {
@@ -29,32 +33,41 @@ var WowScroll = {
 		var self = this,
 			container = target,
 			content = container.html(),
-			contentwrap,
-			contentblock,
+			contentWrap,
+			contentBlock,
 			scrollbar,
+			scrollbarSize = self.scrollbarSize,
 			track,
 			axis = self.axis === "x",
-			axisClass;
+			axisClass,
+			viewLength;
 
-		axisClass = (axis) ? "horizontal" : "vertical";
+		axisClass = (axis) ? "horizontal" : "vertical";		
 
 		container.empty();
-		contentwrap = $("<div/>")
+		contentWrap = $("<div/>")
 			.addClass("wowscroll-content-wrap")
 			.addClass(axisClass)
 			.appendTo(container);
 
-		contentblock = $("<div/>")
+		contentBlock = $("<div/>")
 			.addClass("wowscroll-content")
 			.append(content)
-			.appendTo(contentwrap);
+			.appendTo(contentWrap);
 
 		scrollbar = $("<div/>")
 			.addClass("wowscroll-scrollbar")
-			.appendTo(contentwrap);
+			.appendTo(contentWrap);
 
 		if(self.hide) {
 			scrollbar.addClass("hide");
+		}
+
+		viewLength = (axis) ? contentWrap.width() : contentWrap.height();
+		scrollbarSize = (!isNaN(parseFloat(scrollbarSize)) && isFinite(scrollbarSize) && (scrollbarSize < viewLength)) ? scrollbarSize : "auto";
+		if(scrollbarSize !== "auto") {
+			(axis) ? scrollbar.css("width", scrollbarSize) : scrollbar.css("height", scrollbarSize);
+			this.scrollbarScale = scrollbarSize / viewLength;
 		}
 
 		track = $("<div/>")
@@ -62,49 +75,46 @@ var WowScroll = {
 			.appendTo(scrollbar);		
 
 		this.container = container;
-		this.contentwrap = contentwrap;
-		this.contentblock = contentblock;
+		this.contentWrap = contentWrap;
+		this.contentBlock = contentBlock;
 		this.scrollbar = scrollbar;
 		this.track = track;
 		this.axis = axis;
-		this.contentlength = (axis) ? contentblock.width() : contentblock.height();
-		this.viewlength = (axis) ? contentwrap.width() : contentwrap.height();
+		this.contentLength = (axis) ? contentBlock.width() : contentBlock.height();
+		this.viewLength = viewLength;
+		this.contentScale = this.viewLength / this.contentLength;
+		this.scrollbarLength = (axis) ? scrollbar.width() : scrollbar.height();
 	},
 
 	drawThumb: function() {
 		var self = this,
-			container = self.container,
-			contentwrap = self.contentwrap,
-			contentblock = self.contentblock,
-			scrollbar = self.scrollbar,
-			track = self.track,
 			axis = self.axis,
-			scale = self.viewlength/self.contentlength,
-			thumbSize = {},
-			thumb;
+			track = self.track,
+			scrollbarLength = self.scrollbarLength,			
+			contentScale = self.contentScale,
+			thumbLength,
+			thumb,
+			prop = (axis) ? "width" : "height";
 
-		thumbSize = (axis) ? { "width": scale*scrollbar.width() } : { "height": scale*scrollbar.height() };
+		thumbLength = contentScale * scrollbarLength;
 
 		thumb = $("<div/>")
 			.addClass("thumb")
-			.css(thumbSize)
+			.css(prop, thumbLength)
 			.appendTo(track);
 
 		this.thumb = thumb;
-		this.scale = scale;
+		this.thumbLength = thumbLength;
 	},
 
 	setEvents: function() {
 		var self = this,
+			axis = self.axis,
 			container = self.container,
-			contentwrap = self.contentwrap,
-			contentblock = self.contentblock,
 			scrollbar = self.scrollbar,
-			scale = self.scale,
-			thumb = self.thumb,
-			axis = self.axis;
+			thumb = self.thumb;
 
-		if(self.scroll) {
+		if(self.wheelEnabled) {
 			container[0].addEventListener('DOMMouseScroll', wheel, false);
 	        container[0].addEventListener('mousewheel', wheel, false);
 	        container[0].addEventListener('MozMousePixelScroll', function(event){
@@ -122,19 +132,18 @@ var WowScroll = {
         	event.preventDefault();
 
         	var delta,
-        		wheel = self.wheel;
+        		wheelSense = self.wheelSense;
 
-        	delta = (axis) ? event.wheelDelta*wheel/Math.abs(event.wheelDelta) : event.wheelDeltaY*wheel/Math.abs(event.wheelDeltaY);
+        	delta = (axis) ? (event.wheelDelta * wheelSense / Math.abs(event.wheelDelta)) : (event.wheelDeltaY * wheelSense / Math.abs(event.wheelDeltaY));
         	
-        	self.thumbScroll(delta);
-        	self.contentScroll();
+        	self.contentScroll(delta);
+        	self.thumbScroll();
         }
 
         function grab(event) {
         	event.preventDefault();
 
-        	var startPosition = axis ? event.pageX : event.pageY,
-        		thumb = self.thumb;
+        	var startPosition = axis ? event.pageX : event.pageY;
 
         	self.startPosition = startPosition;
 
@@ -148,18 +157,17 @@ var WowScroll = {
 
         function drag(event) {
         	var startPosition = self.startPosition,
-        		scale = self.scale,
-				delta = axis ? startPosition-event.pageX : startPosition-event.pageY;
+        		contentScale = self.contentScale,
+        		scrollbarScale = self.scrollbarScale,
+				delta = axis ? startPosition - event.pageX : startPosition - event.pageY;
 
-			self.thumbScroll(delta/scale);
-			self.contentScroll();
+			self.contentScroll(delta / (contentScale * scrollbarScale));
+			self.thumbScroll();
 
 			self.startPosition = axis ? event.pageX : event.pageY;
         }
 
         function release(event) {
-        	var thumb = self.thumb;
-
         	$(document).unbind('mousemove', drag);
             $(document).unbind('mouseup', release);
             thumb.unbind('mouseup', release);
@@ -173,64 +181,72 @@ var WowScroll = {
         function updateScroll(event) {
 	    	event.stopImmediatePropagation();
 
-	    	var contentblock = self.contentblock,
-	    		scrollbar = self.scrollbar,
-	    		viewlength = self.viewlength,
-	    		contentlength = self.contentlength,
-	    		currentlength = (axis) ? contentblock.width() : contentblock.height(),
-	    		thumb = self.thumb,
-	    		scale,
+	    	var contentBlock = self.contentBlock,
+	    		viewLength = self.viewLength,
+	    		contentLength = self.contentLength,
+	    		scrollbarLength = self.scrollbarLength,
+	    		newContentLength = (axis) ? contentBlock.width() : contentBlock.height(),
+	    		prop = (axis) ? "width" : "height",
+	    		contentScale,
 	    		thumbsize = {};
 
-	    	if(currentlength !== contentlength) {
-	    		scale = viewlength/currentlength;
-	    		thumbSize = (axis) ? { "width": scale*scrollbar.width() } : { "height": scale*scrollbar.height() };
+	    	if(newContentLength !== contentLength) {
+	    		contentScale = viewLength / newContentLength;
+	    		if(contentScale < 1) {
+	    			scrollbar.removeClass("disabled");
+	    		} else {
+	    			scrollbar.addClass("disabled");
+	    		}
+	    		thumbSize = contentScale * scrollbarLength;
 
-	    		thumb.css(thumbSize);
+	    		thumb.css(prop, thumbSize);
 
-	    		self.scale = scale;
-	    		self.contentlength = currentlength;
+	    		self.contentScale = contentScale;
+	    		self.contentLength = newContentLength;
+	    		self.thumbLength = thumbSize;
+
+	    		self.thumbScroll();
 	    	}    	
 		}
 	},
 
-	thumbScroll: function(delta) {
+	contentScroll: function (delta) {
     	var self = this,
     		axis = self.axis,
-    		scrollbar = self.scrollbar,
-    		thumb = self.thumb,
-    		scale = self.scale,
-    		prop = (axis) ? "margin-left" : "margin-top";
-    		thumbMove = {},
-    		margin = parseInt(thumb.css(prop), 10)-delta*scale,
-    		maxMargin = (axis) ? scrollbar.width()-thumb.width() : scrollbar.height()-thumb.height();
-
-    	margin = (margin > maxMargin) ? maxMargin : margin;
-    	margin = (margin > 0) ? margin : 0; 
-    	thumbMove[prop] =  margin; 		
-    	
-    	thumb.css(thumbMove);
-    },
-
-    contentScroll: function () {
-    	var self = this,
-    		axis = self.axis,
-    		contentwrap = self.contentwrap,
-    		contentblock = self.contentblock,
-    		thumb = self.thumb,
-    		scale = self.scale,
+    		contentBlock = self.contentBlock,
+    		viewLength = self.viewLength,
+    		contentLength = self.contentLength,
     		prop = (axis) ? "left" : "top",
-    		thumbProp = (axis) ? "margin-left" : "margin-top",
-    		contentMove = {},
-    		margin = -parseInt(thumb.css(thumbProp), 10)/scale,
-    		maxMargin = (axis) ? contentblock.width()-contentwrap.width() : contentblock.height()-contentwrap.height();
+    		contentMove,
+    		margin = parseFloat(contentBlock.css(prop), 10) + delta,
+    		maxMargin = contentLength - viewLength;
 
     	margin = (margin < -maxMargin) ? -maxMargin : margin;
     	margin = (margin < 0) ? margin : 0;
-    	contentMove[prop] = margin;
+    	contentMove = margin;
 
-    	contentblock.css(contentMove);
-    }
+    	contentBlock.css(prop, contentMove);
+    },
 
-	
+	thumbScroll: function() {
+    	var self = this,
+    		axis = self.axis,
+    		contentBlock = self.contentBlock,
+    		scrollbarLength = self.scrollbarLength,
+    		thumb = self.thumb,
+    		thumbLength = self.thumbLength,
+    		scrollbarScale = self.scrollbarScale,
+    		contentScale = self.contentScale,
+    		prop = (axis) ? "margin-left" : "margin-top",
+    		contentProp = (axis) ? "left" : "top",
+    		thumbMove,
+    		margin = -parseFloat(contentBlock.css(contentProp), 10)  * contentScale * scrollbarScale,
+    		maxMargin = scrollbarLength - thumbLength;
+
+    	margin = (margin > maxMargin) ? maxMargin : margin;
+    	margin = (margin > 0) ? margin : 0; 
+    	thumbMove =  margin; 		
+    	
+    	thumb.css(prop, thumbMove);
+    }	
 }

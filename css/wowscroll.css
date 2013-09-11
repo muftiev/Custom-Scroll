@@ -17,6 +17,10 @@
 	transition: opacity 0.5s ease;
 }
 
+.wowscroll-scrollbar.disabled {
+	display: none;
+}
+
 .wowscroll-content-wrap:hover>.wowscroll-scrollbar.hide {
 	opacity: 1;
 }
