@@ -13,8 +13,6 @@ jQuery.fn.wowscroll = function(options) {
 	}
 }
 
-
-
 var WowScroll = {
 	axis: "y",
 	wheelSense: 120,
@@ -38,6 +36,7 @@ var WowScroll = {
 			scrollbar,
 			scrollbarSize = self.scrollbarSize,
 			track,
+			thumb,
 			axis = self.axis === "x",
 			axisClass,
 			viewLength;
@@ -68,25 +67,30 @@ var WowScroll = {
 		if(scrollbarSize !== "auto") {
 			scrollbarSize = (scrollbarSize >= 15) ? scrollbarSize : 15;
 			(axis) ? scrollbar.css("width", scrollbarSize) : scrollbar.css("height", scrollbarSize);
-			this.scrollbarScale = scrollbarSize / viewLength;
-			this.scrollbarSize = scrollbarSize;
+			self.scrollbarScale = scrollbarSize / viewLength;
+			self.scrollbarSize = scrollbarSize;
 		} else {
-			this.scrollbarSize = viewLength;
+			self.scrollbarSize = viewLength;
 		}
 
 		track = $("<div/>")
 			.addClass("track")
-			.appendTo(scrollbar);		
+			.appendTo(scrollbar);
 
-		this.container = container;
-		this.contentWrap = contentWrap;
-		this.contentBlock = contentBlock;
-		this.scrollbar = scrollbar;
-		this.track = track;
-		this.axis = axis;
-		this.contentLength = (axis) ? contentBlock.width() : contentBlock.height();
-		this.viewLength = viewLength;
-		this.contentScale = this.viewLength / this.contentLength;
+		thumb = $("<div/>")
+			.addClass("thumb")
+			.appendTo(track);		
+
+		self.container = container;
+		self.contentWrap = contentWrap;
+		self.contentBlock = contentBlock;
+		self.scrollbar = scrollbar;
+		self.track = track;
+		self.thumb = thumb;
+		self.axis = axis;
+		self.contentLength = (axis) ? contentBlock.width() : contentBlock.height();
+		self.viewLength = viewLength;
+		self.contentScale = self.viewLength / self.contentLength;
 		
 	},
 
@@ -95,7 +99,6 @@ var WowScroll = {
 			axis = self.axis,
 			scrollbarSize = self.scrollbarSize,
 			thumbLength,
-			thumb,
 			prop = (axis) ? "width" : "height";
 
 		thumbLength = self.contentScale * scrollbarSize;
@@ -105,12 +108,8 @@ var WowScroll = {
 			self.contentScale = contentScale;
 		}
 
-		thumb = $("<div/>")
-			.addClass("thumb")
-			.css(prop, thumbLength)
-			.appendTo(self.track);
+		self.thumb.css(prop, thumbLength);
 
-		self.thumb = thumb;
 		self.thumbLength = thumbLength;
 	},
 
@@ -204,17 +203,11 @@ var WowScroll = {
 	    		} else {
 	    			scrollbar.addClass("disabled");
 	    		}
-	    		thumbLength = contentScale * scrollbarSize;
-	    		if(thumbLength < 10) {
-					thumbLength = 10;
-					contentScale = thumbLength / scrollbarSize;
-				}
-
-	    		thumb.css(prop, thumbLength);
 
 	    		self.contentScale = contentScale;
 	    		self.contentLength = newContentLength;
-	    		self.thumbLength = thumbLength;
+	    		
+	    		self.drawThumb();
 
 	    		self.thumbScroll();
 	    	}    	
