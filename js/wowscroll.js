@@ -66,8 +66,12 @@ var WowScroll = {
 		viewLength = (axis) ? contentWrap.width() : contentWrap.height();
 		scrollbarSize = (!isNaN(parseFloat(scrollbarSize)) && isFinite(scrollbarSize) && (scrollbarSize < viewLength)) ? scrollbarSize : "auto";
 		if(scrollbarSize !== "auto") {
+			scrollbarSize = (scrollbarSize >= 15) ? scrollbarSize : 15;
 			(axis) ? scrollbar.css("width", scrollbarSize) : scrollbar.css("height", scrollbarSize);
 			this.scrollbarScale = scrollbarSize / viewLength;
+			this.scrollbarSize = scrollbarSize;
+		} else {
+			this.scrollbarSize = viewLength;
 		}
 
 		track = $("<div/>")
@@ -83,28 +87,31 @@ var WowScroll = {
 		this.contentLength = (axis) ? contentBlock.width() : contentBlock.height();
 		this.viewLength = viewLength;
 		this.contentScale = this.viewLength / this.contentLength;
-		this.scrollbarLength = (axis) ? scrollbar.width() : scrollbar.height();
+		
 	},
 
 	drawThumb: function() {
 		var self = this,
 			axis = self.axis,
-			track = self.track,
-			scrollbarLength = self.scrollbarLength,			
-			contentScale = self.contentScale,
+			scrollbarSize = self.scrollbarSize,
 			thumbLength,
 			thumb,
 			prop = (axis) ? "width" : "height";
 
-		thumbLength = contentScale * scrollbarLength;
+		thumbLength = self.contentScale * scrollbarSize;
+		if(thumbLength < 5) {
+			thumbLength = 5;						
+			contentScale = (scrollbarSize - thumbLength) / (self.contentLength - self.viewLength);
+			self.contentScale = contentScale;
+		}
 
 		thumb = $("<div/>")
 			.addClass("thumb")
 			.css(prop, thumbLength)
-			.appendTo(track);
+			.appendTo(self.track);
 
-		this.thumb = thumb;
-		this.thumbLength = thumbLength;
+		self.thumb = thumb;
+		self.thumbLength = thumbLength;
 	},
 
 	setEvents: function() {
@@ -184,11 +191,11 @@ var WowScroll = {
 	    	var contentBlock = self.contentBlock,
 	    		viewLength = self.viewLength,
 	    		contentLength = self.contentLength,
-	    		scrollbarLength = self.scrollbarLength,
+	    		scrollbarSize = self.scrollbarSize,
 	    		newContentLength = (axis) ? contentBlock.width() : contentBlock.height(),
 	    		prop = (axis) ? "width" : "height",
 	    		contentScale,
-	    		thumbsize = {};
+	    		thumbLength;
 
 	    	if(newContentLength !== contentLength) {
 	    		contentScale = viewLength / newContentLength;
@@ -197,13 +204,17 @@ var WowScroll = {
 	    		} else {
 	    			scrollbar.addClass("disabled");
 	    		}
-	    		thumbSize = contentScale * scrollbarLength;
+	    		thumbLength = contentScale * scrollbarSize;
+	    		if(thumbLength < 10) {
+					thumbLength = 10;
+					contentScale = thumbLength / scrollbarSize;
+				}
 
-	    		thumb.css(prop, thumbSize);
+	    		thumb.css(prop, thumbLength);
 
 	    		self.contentScale = contentScale;
 	    		self.contentLength = newContentLength;
-	    		self.thumbLength = thumbSize;
+	    		self.thumbLength = thumbLength;
 
 	    		self.thumbScroll();
 	    	}    	
@@ -232,7 +243,7 @@ var WowScroll = {
     	var self = this,
     		axis = self.axis,
     		contentBlock = self.contentBlock,
-    		scrollbarLength = self.scrollbarLength,
+    		scrollbarSize = self.scrollbarSize,
     		thumb = self.thumb,
     		thumbLength = self.thumbLength,
     		scrollbarScale = self.scrollbarScale,
@@ -241,7 +252,7 @@ var WowScroll = {
     		contentProp = (axis) ? "left" : "top",
     		thumbMove,
     		margin = -parseFloat(contentBlock.css(contentProp), 10)  * contentScale * scrollbarScale,
-    		maxMargin = scrollbarLength - thumbLength;
+    		maxMargin = scrollbarSize - thumbLength;
 
     	margin = (margin > maxMargin) ? maxMargin : margin;
     	margin = (margin > 0) ? margin : 0; 
