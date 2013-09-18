@@ -160,8 +160,8 @@ var WowScroll = {
 		}
 
 		if(self.arrows) {
-			arrowHome[0].addEventListener('click', function() { step(wheelSense) }, false);
-			arrowEnd[0].addEventListener('click', function() { step(-wheelSense) }, false);
+			arrowHome[0].addEventListener('click', function() { scroll(wheelSense) }, false);
+			arrowEnd[0].addEventListener('click', function() { scroll(-wheelSense) }, false);
 		}
 		
         thumb.bind('mousedown', grab);
@@ -177,11 +177,10 @@ var WowScroll = {
 
         	delta = (axis) ? (event.wheelDelta * wheelSense / Math.abs(event.wheelDelta)) : (event.wheelDeltaY * wheelSense / Math.abs(event.wheelDeltaY));
         	
-        	self.contentScroll(delta);
-        	self.thumbScroll();
+        	scroll(delta);
         }
 
-        function step(delta) {
+        function scroll(delta) {
         	self.contentScroll(delta);
         	self.thumbScroll();
         }
@@ -206,8 +205,7 @@ var WowScroll = {
         		scrollbarScale = self.scrollbarScale,
 				delta = axis ? startPosition - event.pageX : startPosition - event.pageY;
 
-			self.contentScroll(delta / scrollbarScale);
-			self.thumbScroll();
+			scroll(delta / scrollbarScale);
 
 			self.startPosition = axis ? event.pageX : event.pageY;
         }
