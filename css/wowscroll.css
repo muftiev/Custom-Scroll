@@ -7,6 +7,7 @@
 
 .wowscroll-scrollbar {
 	position: absolute;
+	margin: auto;
 }
 
 .wowscroll-scrollbar.hide {
@@ -30,6 +31,7 @@
 	height: 100%;
 	top: 0;
 	right: 0;
+	bottom: 0;
 }
 
 .horizontal>.wowscroll-scrollbar {
@@ -37,6 +39,7 @@
 	height: 5px;
 	bottom: 0;
 	left: 0;
+	right: 0;
 }
 
 .wowscroll-content {
@@ -73,6 +76,41 @@
 .horizontal .wowscroll-scrollbar .thumb {
 	height: 5px;
 	width: 0;
+}
+
+.nav {
+	width: 5px;
+	height: 5px;
+	margin: 0;
+	padding: 0;
+	border: none;
+	position: absolute;
+	background: url(../img/arrows.png);
+	cursor: pointer;
+}
+
+.vertical>.nav-home {
+	top: 0;
+	right: 0;
+	background-position: 0 5px;
+}
+
+.horizontal>.nav-home {
+	bottom: 0;
+	left: 0;
+}
+
+.nav-end {
+	bottom: 0;
+	right: 0;
+}
+
+.vertical>.nav-end {
+	background-position: 5px 5px;
+}
+
+.horizontal>.nav-end {
+	background-position: 5px 0;
 }
 
 .unselectable *{

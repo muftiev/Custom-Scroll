@@ -10,14 +10,14 @@
 			#scroll1 {
 				background: red;
 				width: 500px;
-				height: 120px;
+				height: 110px;
 				border: 1px solid black;
 				overflow: hidden;
 			}
 			.scroll-element {
 				background: blue;
 				width: 100%;
-				height: 48px;
+				height: 38px;
 				border: 1px solid gray;
 			}
 			.box {
@@ -34,30 +34,23 @@
 				$("#scroll1").wowscroll({
 					axis: "y",
 					wheelSense: 20,
-					scrollbarSize: "aaa",
+					//scrollbarSize: 190,
+					arrows: true,
 				});
 
 				$("#box1").wowscroll({
 					axis: "y",
 					hide: false,
+					arrows: true,
 				});
 
 				$("#box2").wowscroll({
 					axis: "x",
+					arrows: true,
 				});
 			});
 		</script>					
 		<div id="scroll1">
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
 			<div class="scroll-element"></div>
 			<div class="scroll-element"></div>
 			<div class="scroll-element"></div>
