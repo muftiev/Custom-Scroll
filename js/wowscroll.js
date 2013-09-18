@@ -83,15 +83,17 @@ var WowScroll = {
 		self.scrollbarSize = scrollbarSize;
 
 		if(arrows) {
+			(axis) ? scrollbar.css("left", 5) : scrollbar.css("top", 5);
+
 			arrowHome = $("<button/>")
 				.addClass("nav")
 				.addClass("nav-home")
-				.appendTo(contentWrap);
+				.prependTo(scrollbar);
 
 			arrowEnd = $("<button/>")
 				.addClass("nav")
 				.addClass("nav-end")
-				.appendTo(contentWrap);
+				.appendTo(scrollbar);
 
 			self.arrowHome = arrowHome;
 			self.arrowEnd = arrowEnd;
