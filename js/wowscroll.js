@@ -162,10 +162,15 @@ var WowScroll = {
 		if(self.arrows) {
 			arrowHome[0].addEventListener('click', function() { scroll(wheelSense) }, false);
 			arrowEnd[0].addEventListener('click', function() { scroll(-wheelSense) }, false);
+
+			arrowHome[0].addEventListener('mousedown', arrowsFast, false);
+			arrowEnd[0].addEventListener('mousedown', arrowsFast, false);
+
+			arrowHome[0].addEventListener('mouseup', function() { clearInterval(self.intervalId) }, false);
+			arrowEnd[0].addEventListener('mouseup', function() { clearInterval(self.intervalId) }, false);
 		}
 		
         thumb.bind('mousedown', grab);
-        thumb.bind('mouseup', drag);
 
         container.on('mouseenter', updateScroll);
 
@@ -188,9 +193,17 @@ var WowScroll = {
         function grab(event) {
         	event.preventDefault();
 
-        	var startPosition = axis ? event.pageX : event.pageY;
+        	var thumbLength = self.thumbLength,
+        		scrollbarSize = self.scrollbarSize,
+        		startPosition,
+        		dragArea = {};
+
+        	startPosition = axis ? event.pageX : event.pageY;
+        	dragArea.from = axis ? event.pageX - parseFloat(thumb.css("margin-left")) : event.pageY - parseFloat(thumb.css("margin-top"));
+        	dragArea.to = dragArea.from + (scrollbarSize - thumbLength);
 
         	self.startPosition = startPosition;
+        	self.dragArea = dragArea;
 
         	$(document).bind('mousemove', drag);
             $(document).bind('mouseup', release);
@@ -202,12 +215,16 @@ var WowScroll = {
 
         function drag(event) {
         	var startPosition = self.startPosition,
+        		dragArea = self.dragArea,
         		scrollbarScale = self.scrollbarScale,
-				delta = axis ? startPosition - event.pageX : startPosition - event.pageY;
+        		currentPosition = axis ? event.pageX : event.pageY;
+				delta = startPosition - currentPosition;
 
-			scroll(delta / scrollbarScale);
+			if((currentPosition > dragArea.from && delta < 0) || (currentPosition < dragArea.to && delta > 0)) {
+				scroll(delta / scrollbarScale);
+			}
 
-			self.startPosition = axis ? event.pageX : event.pageY;
+			self.startPosition = currentPosition;
         }
 
         function release(event) {
@@ -219,6 +236,18 @@ var WowScroll = {
 
             $("body").removeClass("unselectable");
             scrollbar.css("opacity", "");
+        }
+
+        function arrowsFast() {
+        	var delta = $(event.target).hasClass("nav-home") ? wheelSense : -wheelSense;
+        	self.intervalId = setInterval(function() { scroll(delta) }, 200);
+
+        	$(event.target).bind('mouseup', arrowsFastStop);
+        	$(document).bind('mouseup', arrowsFastStop);
+        }
+
+        function arrowsFastStop() {
+        	clearInterval(self.intervalId);
         }
 
         function updateScroll(event) {
