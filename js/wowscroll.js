@@ -248,6 +248,9 @@ var WowScroll = {
 
         function arrowsFastStop() {
         	clearInterval(self.intervalId);
+
+        	$(event.target).unbind('mouseup', arrowsFastStop);
+        	$(document).unbind('mouseup', arrowsFastStop);
         }
 
         function updateScroll(event) {
@@ -256,14 +259,13 @@ var WowScroll = {
 	    	var contentBlock = self.contentBlock,
 	    		viewLength = self.viewLength,
 	    		contentLength = self.contentLength,
-	    		scrollbarSize = self.scrollbarSize,
 	    		newContentLength = (axis) ? contentBlock.width() : contentBlock.height(),
 	    		prop = (axis) ? "width" : "height",
 	    		scrollbarScale,
 	    		thumbLength;
 
 	    	if(newContentLength !== contentLength) {
-	    		scrollbarScale = scrollbarSize / newContentLength;
+	    		scrollbarScale = viewLength / newContentLength;
 	    		if(scrollbarScale < 1) {
 	    			scrollbar.removeClass("disabled");
 	    		} else {
