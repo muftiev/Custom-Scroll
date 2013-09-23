@@ -180,7 +180,12 @@ var WowScroll = {
 
         	var delta;
 
-        	delta = (axis) ? (event.wheelDelta * wheelSense / Math.abs(event.wheelDelta)) : (event.wheelDeltaY * wheelSense / Math.abs(event.wheelDeltaY));
+        	if(!axis && (typeof event.wheelDeltaY === 'number') && isFinite(event.wheelDeltaY)) {
+        		delta = event.wheelDeltaY * wheelSense / Math.abs(event.wheelDeltaY);
+        	} else {
+        		delta = event.wheelDelta * wheelSense / Math.abs(event.wheelDelta);
+        	}
+
         	
         	scroll(delta);
         }
@@ -238,7 +243,7 @@ var WowScroll = {
             scrollbar.css("opacity", "");
         }
 
-        function arrowsFast() {
+        function arrowsFast(event) {
         	var delta = $(event.target).hasClass("nav-home") ? wheelSense : -wheelSense;
         	self.intervalId = setInterval(function() { scroll(delta) }, 200);
 
