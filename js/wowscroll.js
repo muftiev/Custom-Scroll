@@ -53,10 +53,10 @@ var WowScroll = {
 			axisClass,
 			viewLength;
 
-		axisClass = (axis) ? "horizontal" : "vertical";	
+		axisClass = (axis) ? "horizontal" : "vertical";		
 		if(container.selector === "body") {
 			(axis) ? container.css("width", window.innerWidth) : container.css("height", window.innerHeight);
-		}	
+		}
 
 		container.empty();
 		contentWrap = $("<div/>")
@@ -111,7 +111,14 @@ var WowScroll = {
 
 		thumb = $("<div/>")
 			.addClass("thumb")
-			.appendTo(track);		
+			.appendTo(track);	
+
+		if(self.touchEvents && $("body>.wowscroll-tap").length === 0) {
+			$("<img/>")
+				.attr({"src": "img/tap.png", "alt": "tap"})
+				.addClass("wowscroll-tap")
+				.appendTo("body");
+		}
 
 		self.container = container;
 		self.contentWrap = contentWrap;
@@ -156,7 +163,7 @@ var WowScroll = {
 			arrowHome = self.arrowHome,
 			arrowEnd = self.arrowEnd,
 			thumb = self.thumb,
-			touchEvents = 'ontouchstart' in document.documentElement;
+			touchEvents = self.touchEvents;
 
 		if(self.wheelEnabled) {
 			container[0].addEventListener('DOMMouseScroll', wheel, false);
@@ -178,10 +185,16 @@ var WowScroll = {
 		}
 		
 		if(touchEvents) {
-			container[0].ontouchstart = function(event) {   
-                if(event.touches.length === 1) {
-                    grab(event.touches[0]);
-                    event.stopImmediatePropagation();
+			self.dragTouchMode = false;
+			self.touchStartId = null;
+
+			container[0].ontouchstart = function(event) { 
+				if(event.touches.length == 1) {
+                	event.preventDefault();
+                	event.stopPropagation();
+                    touch(event);
+                } else {
+                	return true;
                 }
             }
 		} else {
@@ -191,7 +204,7 @@ var WowScroll = {
         container.on('mouseenter', updateScroll);
 
         function wheel(event) {
-        	event.stopImmediatePropagation();
+        	event.stopPropagation();
         	event.preventDefault();
 
         	var delta;
@@ -212,8 +225,6 @@ var WowScroll = {
         }
 
         function grab(event) {
-        	event.preventDefault();
-
         	var thumbLength = self.thumbLength,
         		scrollbarSize = self.scrollbarSize,
         		startPosition,
@@ -226,50 +237,110 @@ var WowScroll = {
         	self.startPosition = startPosition;
         	self.dragArea = dragArea;
 
-        	if (touchEvents) {
-                document.ontouchmove = function(event) {
-                    event.preventDefault();
-                    drag(event.touches[0]);
-                };
-                document.ontouchend = release;        
-            } else {
-            	$(document).bind('mousemove', drag);
-	            $(document).bind('mouseup', release);
-	            thumb.bind('mouseup', release);
-            }
+        	$(document).bind('mousemove', dragThumb);
+            $(document).bind('mouseup', release);
+            thumb.bind('mouseup', release);
 
             $("body").addClass("unselectable");
             scrollbar.css("opacity", 1);
         }
 
-        function drag(event) {
+        function dragThumb(event) {
         	var startPosition = self.startPosition,
         		dragArea = self.dragArea,
         		scrollbarScale = self.scrollbarScale,
-        		currentPosition = axis ? event.pageX : event.pageY;
+        		currentPosition = axis ? event.pageX : event.pageY,
 				delta = startPosition - currentPosition;
 
-			if((currentPosition > dragArea.from && delta < 0) || (currentPosition < dragArea.to && delta > 0)) {
-				scroll(delta / scrollbarScale);
+			if(touchEvents) {
+				scroll(-delta);
+			} else {
+				if((currentPosition > dragArea.from && delta < 0) || (currentPosition < dragArea.to && delta > 0)) {
+					scroll(delta / scrollbarScale);
+				}
 			}
+			
 
 			self.startPosition = currentPosition;
         }
 
+        function touch(event) {
+        	self.startPosition = axis ? event.pageX : event.pageY;        	
+        	self.touchStartId = setTimeout(function() {
+        		$("body>.wowscroll-tap").css({"left": event.pageX-25, "top": event.pageY-25}).show(0);
+        		$("body>.wowscroll-tap").animate({
+        			width: 100,
+        			left: event.pageX-50,
+        			top: event.pageY-50
+        		}, 2000,
+        		function() {
+        			$(this).hide(0).css("width", 50);
+        			self.dragTouchMode = true;
+        		});        		
+        		
+        	}, 1000);
+        	
+    		document.ontouchmove = function(event) {
+    			event.stopImmediatePropagation();
+    			if(self.dragTouchMode) {
+    				dragTouch(event);
+    			} else {
+    				clearTimeout(self.touchStartId);
+    				$("body>.wowscroll-tap").stop().hide(0).css("width", 50);
+    				dragThumb(event)
+    			}
+    			self.touchStartId = null;
+            };
+            document.ontouchend = release;  
+
+            $("body").addClass("unselectable");
+            scrollbar.css("opacity", 1);         		
+        	       	
+        }
+
+        function dragTouch(event) {
+        	var startPosition = self.startPosition,
+        		currentPosition = axis ? event.pageX : event.pageY,
+				delta = (startPosition - currentPosition > 0) ? wheelSense : -wheelSense,
+				dragDirection = delta < 0;
+
+			if(Math.abs(startPosition - currentPosition) > 20) {
+				if(typeof self.intervalId !== "number") {
+					self.intervalId = setInterval(function() { scroll(delta) }, 200);
+					self.dragDirection = dragDirection; 
+				} else if(self.dragDirection !== dragDirection) {
+					clearInterval(self.intervalId);
+					self.intervalId = setInterval(function() { scroll(delta) }, 200);
+					self.dragDirection = dragDirection; 
+				}
+				self.startPosition = currentPosition;				
+			}			
+
+			
+        }
+
         function release(event) {
-        	$(document).unbind('mousemove', drag);
+        	$(document).unbind('mousemove', dragThumb);
             $(document).unbind('mouseup', release);
             thumb.unbind('mouseup', release);
             document.ontouchmove = document.ontouchend = null;
 
+            clearInterval(self.intervalId);
             self.startPosition = null;
+            self.intervalId = null;
+            self.dragTouchMode = false;
+            if(self.touchStartId !== null) {
+            	clearTimeout(self.touchStartId);
+            }
 
+            $("body>.wowscroll-tap").stop().hide(0).css("width", 50);
             $("body").removeClass("unselectable");
             scrollbar.css("opacity", "");
         }
 
         function arrowsFast(event) {
         	var delta = $(event.target).hasClass("nav-home") ? wheelSense : -wheelSense;
+
         	self.intervalId = setInterval(function() { scroll(delta) }, 200);
 
         	$(event.target).bind('mouseup', arrowsFastStop);
