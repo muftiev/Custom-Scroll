@@ -1,503 +1,90 @@
 <!DOCTYPE html>
-<html>
-	<head>
-	    <title>Yandex Slideshow</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" type="text/css" href="css/wowscroll.css"/>
-		<script type="text/javascript" src="js/jquery.min.js"></script>
-		<script type="text/javascript" src="js/wowscroll.js"></script>	
-		<style type="text/css">
-			#scroll1 {
-				background: red;
-				width: 500px;
-				height: 110px;
-				border: 1px solid black;
-				overflow: hidden;
-			}
-			.scroll-element {
-				background: blue;
-				width: 100%;
-				height: 38px;
-				border: 1px solid gray;
-			}
-			.box {
-				height: 400px;
-    			border: 1px solid #ddd;
-    			padding: 5px;
-    			overflow: hidden;
-			}
-		</style>	
-	</head>
-	<body>
-		<script>
-			$(document).ready(function() {
-				$("#scroll1").wowscroll({
-					axis: "y",
-					wheelSense: 20,
-					//scrollbarSize: 50,
-					arrows: true,
-				});
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>WowScroll</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
 
-				$("#box1").wowscroll({
-					axis: "y",
-					hide: false,
-					arrows: true,
-				});
+        <link rel="stylesheet" href="normalize.css">
+        <link rel="stylesheet" href="main.css"> 
+        <link rel="stylesheet" href="css/wowscroll.css">
 
-				$("#box2").wowscroll({
-					axis: "x",
-					//arrows: true,
-				});
-			});
-		</script>					
-		<div id="scroll1">
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-			<div class="scroll-element"></div>
-		</div>
-		<br/>
-		<div id="box1" class="box">
-	        <div id="wrap1">
-	        	<p>
-	        		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum sodales
-		            tellus eget rutrum.
-		            Phasellus
-		            tristique pretium mauris, quis aliquet nunc aliquet ut. Duis in posuere mauris. Maecenas consectetur
-		            porta
-		            hendrerit. Aenean cursus nunc quis justo venenatis at dignissim nulla molestie. Sed quis massa id metus
-		            placerat
-		            dignissim. Donec tortor ante, vestibulum at tempus porta, congue tincidunt lectus.
-		        </p>
-	            <p>
-	            	Duis consequat dictum lectus, ac volutpat enim pharetra sit amet. Suspendisse magna sapien, laoreet non
-	                ullamcorper
-	                quis, commodo a magna. Proin quis gravida magna. Proin felis erat, scelerisque in tincidunt et,
-	                convallis a
-	                felis.
-	                Nullam at diam tortor. Sed pulvinar ante in sapien viverra consequat. Nulla a aliquet felis. Donec et
-	                varius
-	                mauris.
-	                Aliquam varius est quis felis tincidunt sagittis.
-	            </p>
-	            <p>
-	            	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum sodales tellus eget rutrum.
-	                Phasellus
-	                tristique pretium mauris, quis aliquet nunc aliquet ut. Duis in posuere mauris. Maecenas consectetur
-	                porta
-	                hendrerit. Aenean cursus nunc quis justo venenatis at dignissim nulla molestie. Sed quis massa id metus
-	                placerat
-	                dignissim. Donec tortor ante, vestibulum at tempus porta, congue tincidunt lectus.
-	            </p>
-	            <p>
-	            	Duis consequat dictum lectus, ac volutpat enim pharetra sit amet. Suspendisse magna sapien, laoreet non
-	                ullamcorper
-	                quis, commodo a magna. Proin quis gravida magna. Proin felis erat, scelerisque in tincidunt et,
-	                convallis a
-	                felis.
-	                Nullam at diam tortor. Sed pulvinar ante in sapien viverra consequat. Nulla a aliquet felis. Donec et
-	                varius
-	                mauris.
-	                Aliquam varius est quis felis tincidunt sagittis.
-	            </p>
-		        <div style="height: 200px; border: 1px solid red; overflow: hidden">
-		            <p>
-		            	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum sodales tellus eget rutrum.
-		                Phasellus
-		                tristique pretium mauris, quis aliquet nunc aliquet ut. Duis in posuere mauris. Maecenas consectetur
-		                porta
-		                hendrerit. Aenean cursus nunc quis justo venenatis at dignissim nulla molestie. Sed quis massa id metus
-		                placerat
-		                dignissim. Donec tortor ante, vestibulum at tempus porta, congue tincidunt lectus.
-		            </p>
-		            <p>
-		            	Duis consequat dictum lectus, ac volutpat enim pharetra sit amet. Suspendisse magna sapien, laoreet non
-		                ullamcorper
-		                quis, commodo a magna. Proin quis gravida magna. Proin felis erat, scelerisque in tincidunt et,
-		                convallis a
-		                felis.
-		                Nullam at diam tortor. Sed pulvinar ante in sapien viverra consequat. Nulla a aliquet felis. Donec et
-		                varius
-		                mauris.
-		                Aliquam varius est quis felis tincidunt sagittis.
-		            </p>
-		            <p>
-		            	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum sodales tellus eget rutrum.
-		                Phasellus
-		                tristique pretium mauris, quis aliquet nunc aliquet ut. Duis in posuere mauris. Maecenas consectetur
-		                porta
-		                hendrerit. Aenean cursus nunc quis justo venenatis at dignissim nulla molestie. Sed quis massa id metus
-		                placerat
-		                dignissim. Donec tortor ante, vestibulum at tempus porta, congue tincidunt lectus.
-		            </p>
-		            <p>
-		            	Duis consequat dictum lectus, ac volutpat enim pharetra sit amet. Suspendisse magna sapien, laoreet non
-		                ullamcorper
-		                quis, commodo a magna. Proin quis gravida magna. Proin felis erat, scelerisque in tincidunt et,
-		                convallis a
-		                felis.
-		                Nullam at diam tortor. Sed pulvinar ante in sapien viverra consequat. Nulla a aliquet felis. Donec et
-		                varius
-		                mauris.
-		                Aliquam varius est quis felis tincidunt sagittis.
-		            </p>
-		            <p>
-		            	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum sodales tellus eget rutrum.
-		                Phasellus
-		                tristique pretium mauris, quis aliquet nunc aliquet ut. Duis in posuere mauris. Maecenas consectetur
-		                porta
-		                hendrerit. Aenean cursus nunc quis justo venenatis at dignissim nulla molestie. Sed quis massa id metus
-		                placerat
-		                dignissim. Donec tortor ante, vestibulum at tempus porta, congue tincidunt lectus.
-		            </p>
-		            <p>
-		            	Duis consequat dictum lectus, ac volutpat enim pharetra sit amet. Suspendisse magna sapien, laoreet non
-		                ullamcorper
-		                quis, commodo a magna. Proin quis gravida magna. Proin felis erat, scelerisque in tincidunt et,
-		                convallis a
-		                felis.
-		                Nullam at diam tortor. Sed pulvinar ante in sapien viverra consequat. Nulla a aliquet felis. Donec et
-		                varius
-		                mauris.
-		                Aliquam varius est quis felis tincidunt sagittis.
-		            </p>
-		            <p>
-		            	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum sodales tellus eget rutrum.
-		                Phasellus
-		                tristique pretium mauris, quis aliquet nunc aliquet ut. Duis in posuere mauris. Maecenas consectetur
-		                porta
-		                hendrerit. Aenean cursus nunc quis justo venenatis at dignissim nulla molestie. Sed quis massa id metus
-		                placerat
-		                dignissim. Donec tortor ante, vestibulum at tempus porta, congue tincidunt lectus.
-		            </p>
-		            <p>
-		            	Duis consequat dictum lectus, ac volutpat enim pharetra sit amet. Suspendisse magna sapien, laoreet non
-		                ullamcorper
-		                quis, commodo a magna. Proin quis gravida magna. Proin felis erat, scelerisque in tincidunt et,
-		                convallis a
-		                felis.
-		                Nullam at diam tortor. Sed pulvinar ante in sapien viverra consequat. Nulla a aliquet felis. Donec et
-		                varius
-		                mauris.
-		                Aliquam varius est quis felis tincidunt sagittis.
-		            </p>
-		            <p>
-		            	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum sodales tellus eget rutrum.
-		                Phasellus
-		                tristique pretium mauris, quis aliquet nunc aliquet ut. Duis in posuere mauris. Maecenas consectetur
-		                porta
-		                hendrerit. Aenean cursus nunc quis justo venenatis at dignissim nulla molestie. Sed quis massa id metus
-		                placerat
-		                dignissim. Donec tortor ante, vestibulum at tempus porta, congue tincidunt lectus.
-		            </p>
-		            <p>
-		            	Duis consequat dictum lectus, ac volutpat enim pharetra sit amet. Suspendisse magna sapien, laoreet non
-		                ullamcorper
-		                quis, commodo a magna. Proin quis gravida magna. Proin felis erat, scelerisque in tincidunt et,
-		                convallis a
-		                felis.
-		                Nullam at diam tortor. Sed pulvinar ante in sapien viverra consequat. Nulla a aliquet felis. Donec et
-		                varius
-		                mauris.
-		                Aliquam varius est quis felis tincidunt sagittis.
-		            </p>
-		            <p>
-		            	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum sodales tellus eget rutrum.
-		                Phasellus
-		                tristique pretium mauris, quis aliquet nunc aliquet ut. Duis in posuere mauris. Maecenas consectetur
-		                porta
-		                hendrerit. Aenean cursus nunc quis justo venenatis at dignissim nulla molestie. Sed quis massa id metus
-		                placerat
-		                dignissim. Donec tortor ante, vestibulum at tempus porta, congue tincidunt lectus.
-		            </p>
-		            <p>
-		            	Duis consequat dictum lectus, ac volutpat enim pharetra sit amet. Suspendisse magna sapien, laoreet non
-		                ullamcorper
-		                quis, commodo a magna. Proin quis gravida magna. Proin felis erat, scelerisque in tincidunt et,
-		                convallis a
-		                felis.
-		                Nullam at diam tortor. Sed pulvinar ante in sapien viverra consequat. Nulla a aliquet felis. Donec et
-		                varius
-		                mauris.
-		                Aliquam varius est quis felis tincidunt sagittis.
-		            </p>
-		        </div>
-	            <p>
-	            	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum sodales tellus eget rutrum.
-	                Phasellus
-	                tristique pretium mauris, quis aliquet nunc aliquet ut. Duis in posuere mauris. Maecenas consectetur
-	                porta
-	                hendrerit. Aenean cursus nunc quis justo venenatis at dignissim nulla molestie. Sed quis massa id metus
-	                placerat
-	                dignissim. Donec tortor ante, vestibulum at tempus porta, congue tincidunt lectus.
-	            </p>
-	            <p>
-	            	Duis consequat dictum lectus, ac volutpat enim pharetra sit amet. Suspendisse magna sapien, laoreet non
-	                ullamcorper
-	                quis, commodo a magna. Proin quis gravida magna. Proin felis erat, scelerisque in tincidunt et,
-	                convallis a
-	                felis.
-	                Nullam at diam tortor. Sed pulvinar ante in sapien viverra consequat. Nulla a aliquet felis. Donec et
-	                varius
-	                mauris.
-	                Aliquam varius est quis felis tincidunt sagittis.
-	            </p>
-	            <p>
-	            	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum sodales tellus eget rutrum.
-	                Phasellus
-	                tristique pretium mauris, quis aliquet nunc aliquet ut. Duis in posuere mauris. Maecenas consectetur
-	                porta
-	                hendrerit. Aenean cursus nunc quis justo venenatis at dignissim nulla molestie. Sed quis massa id metus
-	                placerat
-	                dignissim. Donec tortor ante, vestibulum at tempus porta, congue tincidunt lectus.
-	            </p>
-	            <p>
-	            	Duis consequat dictum lectus, ac volutpat enim pharetra sit amet. Suspendisse magna sapien, laoreet non
-	                ullamcorper
-	                quis, commodo a magna. Proin quis gravida magna. Proin felis erat, scelerisque in tincidunt et,
-	                convallis a
-	                felis.
-	                Nullam at diam tortor. Sed pulvinar ante in sapien viverra consequat. Nulla a aliquet felis. Donec et
-	                varius
-	                mauris.
-	                Aliquam varius est quis felis tincidunt sagittis.
-	            </p>
-		        <p>
-		        	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum sodales tellus eget rutrum.
-		            Phasellus
-		            tristique pretium mauris, quis aliquet nunc aliquet ut. Duis in posuere mauris. Maecenas consectetur
-		            porta
-		            hendrerit. Aenean cursus nunc quis justo venenatis at dignissim nulla molestie. Sed quis massa id metus
-		            placerat
-		            dignissim. Donec tortor ante, vestibulum at tempus porta, congue tincidunt lectus.
-		        </p>
-		        <p>
-		        	Duis consequat dictum lectus, ac volutpat enim pharetra sit amet. Suspendisse magna sapien, laoreet non
-		            ullamcorper
-		            quis, commodo a magna. Proin quis gravida magna. Proin felis erat, scelerisque in tincidunt et,
-		            convallis a
-		            felis.
-		            Nullam at diam tortor. Sed pulvinar ante in sapien viverra consequat. Nulla a aliquet felis. Donec et
-		            varius
-		            mauris.
-		            Aliquam varius est quis felis tincidunt sagittis.
-		        </p>
-		        <div style="height: 200px; border: 1px solid red">
-		            <p>
-		            	Duis consequat dictum lectus, ac volutpat enim pharetra sit amet. Suspendisse magna sapien, laoreet non
-		                ullamcorper
-		                quis, commodo a magna. Proin quis gravida magna. Proin felis erat, scelerisque in tincidunt et,
-		                convallis a
-		                felis.
-		                Nullam at diam tortor. Sed pulvinar ante in sapien viverra consequat. Nulla a aliquet felis. Donec et
-		                varius
-		                mauris.
-		                Aliquam varius est quis felis tincidunt sagittis.
-		            </p>
-		            <div id="box2" style="height: 100px; width: 400px; border: 1px solid green;">
-		                <p style="color :#b22222; width: 800px;">
-		                	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum sodales
-		                    tellus eget rutrum.
-		                    Phasellus
-		                    tristique pretium mauris, quis aliquet nunc aliquet ut. Duis in posuere mauris. Maecenas consectetur
-		                    porta
-		                    hendrerit. Aenean cursus nunc quis justo venenatis at dignissim nulla molestie. Sed quis massa id
-		                    metus
-		                    placerat
-		                    dignissim. Donec tortor ante, vestibulum at tempus porta, congue tincidunt lectus.
-		                </p>
-		            </div>
-		        </div>
-		        <br>
-		        <hr>
-		        <br>
-		        <p>
-		        	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum sodales tellus eget rutrum.
-		            Phasellus
-		            tristique pretium mauris, quis aliquet nunc aliquet ut. Duis in posuere mauris. Maecenas consectetur
-		            porta
-		            hendrerit. Aenean cursus nunc quis justo venenatis at dignissim nulla molestie. Sed quis massa id metus
-		            placerat
-		            dignissim. Donec tortor ante, vestibulum at tempus porta, congue tincidunt lectus.
-		        </p>
-		        <p>
-		        	Duis consequat dictum lectus, ac volutpat enim pharetra sit amet. Suspendisse magna sapien, laoreet non
-		            ullamcorper
-		            quis, commodo a magna. Proin quis gravida magna. Proin felis erat, scelerisque in tincidunt et,
-		            convallis a
-		            felis.
-		            Nullam at diam tortor. Sed pulvinar ante in sapien viverra consequat. Nulla a aliquet felis. Donec et
-		            varius
-		            mauris.
-		            Aliquam varius est quis felis tincidunt sagittis.
-		        </p>
-		        <p>
-		        	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum sodales tellus eget rutrum.
-		            Phasellus
-		            tristique pretium mauris, quis aliquet nunc aliquet ut. Duis in posuere mauris. Maecenas consectetur
-		            porta
-		            hendrerit. Aenean cursus nunc quis justo venenatis at dignissim nulla molestie. Sed quis massa id metus
-		            placerat
-		            dignissim. Donec tortor ante, vestibulum at tempus porta, congue tincidunt lectus.
-		        </p>
-		        <p>
-		        	Duis consequat dictum lectus, ac volutpat enim pharetra sit amet. Suspendisse magna sapien, laoreet non
-		            ullamcorper
-		            quis, commodo a magna. Proin quis gravida magna. Proin felis erat, scelerisque in tincidunt et,
-		            convallis a
-		            felis.
-		            Nullam at diam tortor. Sed pulvinar ante in sapien viverra consequat. Nulla a aliquet felis. Donec et
-		            varius
-		            mauris.
-		            Aliquam varius est quis felis tincidunt sagittis.
-		        </p>
-		        <p>
-		        	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum sodales tellus eget rutrum.
-		            Phasellus
-		            tristique pretium mauris, quis aliquet nunc aliquet ut. Duis in posuere mauris. Maecenas consectetur
-		            porta
-		            hendrerit. Aenean cursus nunc quis justo venenatis at dignissim nulla molestie. Sed quis massa id metus
-		            placerat
-		            dignissim. Donec tortor ante, vestibulum at tempus porta, congue tincidunt lectus.
-		        </p>
-		        <p>
-		        	Duis consequat dictum lectus, ac volutpat enim pharetra sit amet. Suspendisse magna sapien, laoreet non
-		            ullamcorper
-		            quis, commodo a magna. Proin quis gravida magna. Proin felis erat, scelerisque in tincidunt et,
-		            convallis a
-		            felis.
-		            Nullam at diam tortor. Sed pulvinar ante in sapien viverra consequat. Nulla a aliquet felis. Donec et
-		            varius
-		            mauris.
-		            Aliquam varius est quis felis tincidunt sagittis.
-		        </p>
-	            <p>
-	            	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum sodales tellus eget rutrum.
-	                Phasellus
-	                tristique pretium mauris, quis aliquet nunc aliquet ut. Duis in posuere mauris. Maecenas consectetur
-	                porta
-	                hendrerit. Aenean cursus nunc quis justo venenatis at dignissim nulla molestie. Sed quis massa id metus
-	                placerat
-	                dignissim. Donec tortor ante, vestibulum at tempus porta, congue tincidunt lectus.
-	            </p>
-	            <p>
-	            	Duis consequat dictum lectus, ac volutpat enim pharetra sit amet. Suspendisse magna sapien, laoreet non
-	                ullamcorper
-	                quis, commodo a magna. Proin quis gravida magna. Proin felis erat, scelerisque in tincidunt et,
-	                convallis a
-	                felis.
-	                Nullam at diam tortor. Sed pulvinar ante in sapien viverra consequat. Nulla a aliquet felis. Donec et
-	                varius
-	                mauris.
-	                Aliquam varius est quis felis tincidunt sagittis.
-	            </p>
-	            <p>
-	            	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum sodales tellus eget rutrum.
-	                Phasellus
-	                tristique pretium mauris, quis aliquet nunc aliquet ut. Duis in posuere mauris. Maecenas consectetur
-	                porta
-	                hendrerit. Aenean cursus nunc quis justo venenatis at dignissim nulla molestie. Sed quis massa id metus
-	                placerat
-	                dignissim. Donec tortor ante, vestibulum at tempus porta, congue tincidunt lectus.
-	            </p>
-	            <p>
-	            	Duis consequat dictum lectus, ac volutpat enim pharetra sit amet. Suspendisse magna sapien, laoreet non
-	                ullamcorper
-	                quis, commodo a magna. Proin quis gravida magna. Proin felis erat, scelerisque in tincidunt et,
-	                convallis a
-	                felis.
-	                Nullam at diam tortor. Sed pulvinar ante in sapien viverra consequat. Nulla a aliquet felis. Donec et
-	                varius
-	                mauris.
-	                Aliquam varius est quis felis tincidunt sagittis.
-	            </p>
-	            <p>
-	            	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum sodales tellus eget rutrum.
-	                Phasellus
-	                tristique pretium mauris, quis aliquet nunc aliquet ut. Duis in posuere mauris. Maecenas consectetur
-	                porta
-	                hendrerit. Aenean cursus nunc quis justo venenatis at dignissim nulla molestie. Sed quis massa id metus
-	                placerat
-	                dignissim. Donec tortor ante, vestibulum at tempus porta, congue tincidunt lectus.
-	            </p>
-	            <p>
-	            	Duis consequat dictum lectus, ac volutpat enim pharetra sit amet. Suspendisse magna sapien, laoreet non
-	                ullamcorper
-	                quis, commodo a magna. Proin quis gravida magna. Proin felis erat, scelerisque in tincidunt et,
-	                convallis a
-	                felis.
-	                Nullam at diam tortor. Sed pulvinar ante in sapien viverra consequat. Nulla a aliquet felis. Donec et
-	                varius
-	                mauris.
-	                Aliquam varius est quis felis tincidunt sagittis.
-	            </p>
-	            <p>
-	            	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum sodales tellus eget rutrum.
-	                Phasellus
-	                tristique pretium mauris, quis aliquet nunc aliquet ut. Duis in posuere mauris. Maecenas consectetur
-	                porta
-	                hendrerit. Aenean cursus nunc quis justo venenatis at dignissim nulla molestie. Sed quis massa id metus
-	                placerat
-	                dignissim. Donec tortor ante, vestibulum at tempus porta, congue tincidunt lectus.
-	            </p>
-	            <p>
-	            	Duis consequat dictum lectus, ac volutpat enim pharetra sit amet. Suspendisse magna sapien, laoreet non
-	                ullamcorper
-	                quis, commodo a magna. Proin quis gravida magna. Proin felis erat, scelerisque in tincidunt et,
-	                convallis a
-	                felis.
-	                Nullam at diam tortor. Sed pulvinar ante in sapien viverra consequat. Nulla a aliquet felis. Donec et
-	                varius
-	                mauris.
-	                Aliquam varius est quis felis tincidunt sagittis.
-	            </p>
-	        </div>
-	    </div>
-	</body>
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/wowscroll.js"></script>
+        <script type="text/javascript" src="main.js"></script>       
+    </head>
+    <body>   	
+
+        <div class="header-container">
+            <header class="wrapper clearfix">
+                <h1 class="title">Wowscroll</h1>
+            </header>
+        </div>
+
+        <div class="main-container">
+            <div class="main wrapper clearfix">
+
+                <article>
+                    <header>
+                        <h1>Enjoy your Life!</h1>
+                        <p>Are you having a hard time in life and want to enjoy it more? Most people say yes to that question and enjoying your life is having a healthier life. People think the only way you can enjoy life is being rich or famous or popular. That is not true. So learn to enjoy life more and get rid of your worries.</p>
+                    </header>
+                    <section>
+                        <h2>When eating, enjoy your meal</h2>
+                        <p>Don't just eat it, love the taste and goodness and be thankful to have food. Also, eat healthier! Eating too much junk food is bad. There are some cautions you need to take when eating food. Junk food has a lot of calories and you will become obese. But, life is not fun without a little junk food! Try to eat it only as a treat on the weekends. But again, don't eat that much! Eat some fruits and vegetables with every meal you eat.</p>
+                    </section>
+                    <section>
+                        <h2>Learn to play an instrument</h2>
+                        <p>There are many options to this; the trumpet, clarinet, flute, piano, saxophone, etc. Once you decide what instrument you want to play, go on ahead and get one! If you don't have enough money to buy and instrument, see if you can rent one. Take lessons once you get your instrument.</p>
+                    </section>
+                    <footer>
+                        <h3>Sing!</h3>
+                        <p>Learning to sing is hard and most people are not born with the talent. But singing can be fun to do! If you feel like it, take singing lessons! In your room, turn up the music and sing!</p>
+                        <h3>Take a walk</h3>
+                        <p>Walk the block, walk in the park, or even walk around in your house! It will give you exercise and is fun to do, especially when listening to music! If you don't normally take walks, try it!</p>
+                        <h3>Read a book</h3>
+                        <p>Reading relaxes you and brings you in to a whole new world! Read something happy! Anything sad or scary will not relax you.</p>
+                        <h3>Watch a movie</h3>
+                        <p>Same thing with books, watch something happy! It is even worse to watch something scary than reading it!</p>
+                        <h3>Find some mini games to play online</h3>
+                        <p>A website like miniclip.com has lots of games to play! Also try chat rooms. But be safe and don't give any personal information!</p>
+                    </footer>
+                </article>
+
+                <aside>
+                    <ul>
+                        <li><img src="img/galery-img1.jpg" alt=""></li>
+                        <li><img src="img/galery-img2.jpg" alt=""></li>
+                        <li><img src="img/galery-img3.jpg" alt=""></li>
+                        <li><img src="img/galery-img4.jpg" alt=""></li>
+                        <li><img src="img/galery-img5.jpg" alt=""></li>
+                        <li><img src="img/galery-img6.jpg" alt=""></li>
+                        <li><img src="img/galery-img7.jpg" alt=""></li>
+                        <li><img src="img/galery-img8.jpg" alt=""></li>
+                        <li><img src="img/galery-img9.jpg" alt=""></li>
+                        <li><img src="img/galery-img10.jpg" alt=""></li>
+                        <li><img src="img/galery-img11.jpg" alt=""></li>
+                        <li><img src="img/galery-img12.jpg" alt=""></li>
+                        <li><img src="img/galery-img13.jpg" alt=""></li>
+                        <li><img src="img/galery-img14.jpg" alt=""></li>
+                        <li><img src="img/galery-img15.jpg" alt=""></li>
+                        <li><img src="img/galery-img16.jpg" alt=""></li>
+                        <li><img src="img/galery-img17.jpg" alt=""></li>
+                        <li><img src="img/galery-img18.jpg" alt=""></li>
+                        <li><img src="img/galery-img19.jpg" alt=""></li>
+                        <li><img src="img/galery-img20.jpg" alt=""></li>                        
+                    </ul>
+                </aside>
+
+            </div> <!-- #main -->
+        </div> <!-- #main-container -->
+
+        <div class="footer-container">
+            <footer class="wrapper">
+                <h3>by Ruslan Muftiev</h3>
+            </footer>
+        </div>
+
+    </body>
 </html>

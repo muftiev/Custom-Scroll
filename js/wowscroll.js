@@ -30,11 +30,14 @@ var WowScroll = {
 			wheelSense = this.wheelSense;
 
 		this.axis = this.axis === "x";
-		this.wheelSense = (wheelSense >= 1) ? wheelSense : 120;				
+		this.wheelSense = (wheelSense >= 1) ? wheelSense : 120;	
+		this.touchEvents = 'ontouchstart' in document.documentElement;
+		this.arrows = (this.touchEvents) ? false : this.arrows;			
 	},
 
 	build: function(target) {
 		var self = this,
+			touchEvents = self.touchEvents,
 			container = target,
 			content = container.html(),
 			contentWrap,
@@ -50,7 +53,10 @@ var WowScroll = {
 			axisClass,
 			viewLength;
 
-		axisClass = (axis) ? "horizontal" : "vertical";		
+		axisClass = (axis) ? "horizontal" : "vertical";	
+		if(container.selector === "body") {
+			(axis) ? container.css("width", window.innerWidth) : container.css("height", window.innerHeight);
+		}	
 
 		container.empty();
 		contentWrap = $("<div/>")
@@ -149,7 +155,8 @@ var WowScroll = {
 			wheelSense = self.wheelSense,
 			arrowHome = self.arrowHome,
 			arrowEnd = self.arrowEnd,
-			thumb = self.thumb;
+			thumb = self.thumb,
+			touchEvents = 'ontouchstart' in document.documentElement;
 
 		if(self.wheelEnabled) {
 			container[0].addEventListener('DOMMouseScroll', wheel, false);
@@ -170,7 +177,16 @@ var WowScroll = {
 			arrowEnd[0].addEventListener('mouseup', function() { clearInterval(self.intervalId) }, false);
 		}
 		
-        thumb.bind('mousedown', grab);
+		if(touchEvents) {
+			container[0].ontouchstart = function(event) {   
+                if(event.touches.length === 1) {
+                    grab(event.touches[0]);
+                    event.stopImmediatePropagation();
+                }
+            }
+		} else {
+			thumb.bind('mousedown', grab);
+		}        
 
         container.on('mouseenter', updateScroll);
 
@@ -210,9 +226,17 @@ var WowScroll = {
         	self.startPosition = startPosition;
         	self.dragArea = dragArea;
 
-        	$(document).bind('mousemove', drag);
-            $(document).bind('mouseup', release);
-            thumb.bind('mouseup', release);
+        	if (touchEvents) {
+                document.ontouchmove = function(event) {
+                    event.preventDefault();
+                    drag(event.touches[0]);
+                };
+                document.ontouchend = release;        
+            } else {
+            	$(document).bind('mousemove', drag);
+	            $(document).bind('mouseup', release);
+	            thumb.bind('mouseup', release);
+            }
 
             $("body").addClass("unselectable");
             scrollbar.css("opacity", 1);
@@ -236,6 +260,7 @@ var WowScroll = {
         	$(document).unbind('mousemove', drag);
             $(document).unbind('mouseup', release);
             thumb.unbind('mouseup', release);
+            document.ontouchmove = document.ontouchend = null;
 
             self.startPosition = null;
 
