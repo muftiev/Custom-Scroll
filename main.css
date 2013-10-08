@@ -131,12 +131,14 @@ body {
 
 .main article {
     height: 500px;
-    padding: 20px;    
+    padding: 20px;
+    overflow: hidden;   
 }
 
 .main aside {
     height: 200px;
     padding: 30px 5%;
+    overflow: hidden;
 }
 
 .main aside ul {

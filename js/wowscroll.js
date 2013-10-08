@@ -1,5 +1,9 @@
 jQuery.fn.wowscroll = function(options) {
-	var WowScrollObj = inherit(WowScroll);
+	var ua = navigator.userAgent.toLowerCase(),
+		isAndroid = ua.indexOf("android") > -1,
+		WowScrollObj = inherit(WowScroll);
+
+	if(isAndroid) return false;
 
 	WowScrollObj.init(options);
 	WowScrollObj.build(this);
@@ -43,7 +47,6 @@ var WowScroll = {
 			contentWrap,
 			contentBlock,
 			scrollbar,
-			scrollbarSize = self.scrollbarSize,
 			track,
 			thumb,
 			axis = self.axis,
@@ -77,16 +80,11 @@ var WowScroll = {
 			scrollbar.addClass("hide");
 		}
 
-		viewLength = (axis) ? contentWrap.width() : contentWrap.height();	
-		scrollbarSize = (!isNaN(parseFloat(scrollbarSize)) && isFinite(scrollbarSize) && (scrollbarSize < viewLength)) ? scrollbarSize : "auto";	
-		if(scrollbarSize !== "auto") {
-			scrollbarSize = (scrollbarSize >= 20) ? scrollbarSize : 20;
-			scrollbarSize = (arrows && (scrollbarSize > (viewLength - 10))) ? viewLength - 10 : scrollbarSize;					
-		} else {
-			scrollbarSize = (arrows) ? viewLength - 10 : viewLength;
-		}
-		(axis) ? scrollbar.css("width", scrollbarSize) : scrollbar.css("height", scrollbarSize);
-		self.scrollbarSize = scrollbarSize;
+		self.contentBlock = contentBlock;		
+		self.scrollbar = scrollbar;
+		self.viewLength = (axis) ? contentWrap.width() : contentWrap.height();
+
+		self.setScrollbarSize();		
 
 		if(arrows) {
 			(axis) ? scrollbar.css("left", 5) : scrollbar.css("top", 5);
@@ -122,13 +120,30 @@ var WowScroll = {
 
 		self.container = container;
 		self.contentWrap = contentWrap;
-		self.contentBlock = contentBlock;
-		self.scrollbar = scrollbar;
 		self.track = track;
-		self.thumb = thumb;
-		self.contentLength = (axis) ? contentBlock.width() : contentBlock.height();
-		self.viewLength = viewLength;
-		self.scrollbarScale = (viewLength / self.contentLength);	
+		self.thumb = thumb;			
+	},
+
+	setScrollbarSize: function(update) {
+		var self = this,
+			scrollbar = self.scrollbar,			
+			scrollbarSize = self.scrollbarSize,
+			viewLength = self.viewLength,
+			arrows = self.arrows,
+			axis = self.axis;
+
+		scrollbarSize = (!isNaN(parseFloat(scrollbarSize)) && isFinite(scrollbarSize) && (scrollbarSize < viewLength)) ? scrollbarSize : "auto";	
+		if(scrollbarSize !== "auto" && !update) {
+			scrollbarSize = (scrollbarSize >= 20) ? scrollbarSize : 20;
+			scrollbarSize = (arrows && (scrollbarSize > (viewLength - 10))) ? viewLength - 10 : scrollbarSize;					
+		} else {
+			scrollbarSize = (arrows) ? viewLength - 10 : viewLength;
+		}
+		(axis) ? scrollbar.css("width", scrollbarSize) : scrollbar.css("height", scrollbarSize);
+
+		self.scrollbarSize = scrollbarSize;
+		self.contentLength = (axis) ? self.contentBlock.width() : self.contentBlock.height();
+		self.scrollbarScale = (viewLength / self.contentLength);
 	},
 
 	drawThumb: function() {
@@ -203,6 +218,10 @@ var WowScroll = {
 
         container.on('mouseenter', updateScroll);
 
+        if(container.selector === "body") {
+			$(window).resize(updateBodyScroll);
+		}
+
         function wheel(event) {
         	event.stopPropagation();
         	event.preventDefault();
@@ -215,7 +234,6 @@ var WowScroll = {
         		delta = event.wheelDelta * wheelSense / Math.abs(event.wheelDelta);
         	}
 
-        	
         	scroll(delta);
         }
 
@@ -258,8 +276,7 @@ var WowScroll = {
 				if((currentPosition > dragArea.from && delta < 0) || (currentPosition < dragArea.to && delta > 0)) {
 					scroll(delta / scrollbarScale);
 				}
-			}
-			
+			}			
 
 			self.startPosition = currentPosition;
         }
@@ -358,15 +375,19 @@ var WowScroll = {
 	    	event.stopImmediatePropagation();
 
 	    	var contentBlock = self.contentBlock,
-	    		viewLength = self.viewLength,
+	    		contentWrap = self.contentWrap,
+	    		newViewLength = (axis) ? contentWrap.width() : contentWrap.height(),
 	    		contentLength = self.contentLength,
 	    		newContentLength = (axis) ? contentBlock.width() : contentBlock.height(),
 	    		prop = (axis) ? "width" : "height",
 	    		scrollbarScale,
 	    		thumbLength;
 
-	    	if(newContentLength !== contentLength) {
-	    		scrollbarScale = viewLength / newContentLength;
+	    	if((newViewLength !== self.viewLength) || (newContentLength !== contentLength)) {
+	    		self.viewLength = newViewLength;
+	    		self.setScrollbarSize(true);
+
+	    		scrollbarScale = newViewLength / newContentLength;
 	    		if(scrollbarScale < 1) {
 	    			scrollbar.removeClass("disabled");
 	    		} else {
@@ -380,6 +401,35 @@ var WowScroll = {
 
 	    		self.thumbScroll();
 	    	}    	
+		}
+
+		function updateBodyScroll() {
+			var contentBlock = self.contentBlock,
+	    		contentWrap = self.contentWrap,
+	    		viewLength = (axis) ? contentWrap.width() : contentWrap.height(),
+	    		contentLength = (axis) ? contentBlock.width() : contentBlock.height(),
+	    		prop = (axis) ? "width" : "height",
+	    		scrollbarScale,
+	    		thumbLength;
+
+	    	(axis) ? container.css("width", window.innerWidth) : container.css("height", window.innerHeight);
+
+	    	self.viewLength = viewLength;
+	    	self.setScrollbarSize(true);
+	    	
+    		scrollbarScale = viewLength / contentLength;
+    		if(scrollbarScale < 1) {
+    			scrollbar.removeClass("disabled");
+    		} else {
+    			scrollbar.addClass("disabled");
+    		}
+
+    		self.scrollbarScale = scrollbarScale;
+    		self.contentLength = contentLength;
+    		
+    		self.drawThumb();
+
+    		self.thumbScroll();
 		}
 	},
 
