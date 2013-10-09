@@ -71,12 +71,12 @@ body {
    =================== */
 
 body {
-    /*background-image: url('img/bg.jpg');
+    background-image: url('img/bg.jpg');
     background-color: rgba(54, 255, 36, 0.9);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
-    background-position: center;*/
+    background-position: center;
     font-family: Calibri,Helvetica,Arial,sans-serif;
 }
 
