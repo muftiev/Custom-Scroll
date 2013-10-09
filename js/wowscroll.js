@@ -181,11 +181,8 @@ var WowScroll = {
 			touchEvents = self.touchEvents;
 
 		if(self.wheelEnabled) {
-			container[0].addEventListener('DOMMouseScroll', wheel, false);
+			container[0].addEventListener('wheel', wheel, false);
 	        container[0].addEventListener('mousewheel', wheel, false);
-	        container[0].addEventListener('MozMousePixelScroll', function(event){
-		            event.preventDefault();
-		        }, false);
 		}
 
 		if(self.arrows) {
@@ -230,10 +227,22 @@ var WowScroll = {
 
         	var delta;
 
-        	if(!axis && (typeof event.wheelDeltaY === 'number') && isFinite(event.wheelDeltaY)) {
-        		delta = event.wheelDeltaY * wheelSense / Math.abs(event.wheelDeltaY);
+        	if(!axis) {
+        		if((typeof event.wheelDeltaY === 'number') && isFinite(event.wheelDeltaY)) {
+        			delta = event.wheelDeltaY * wheelSense / Math.abs(event.wheelDeltaY);
+        		} else if((typeof event.deltaY === 'number') && isFinite(event.deltaY)) {
+        			delta = -event.deltaY * wheelSense / Math.abs(event.deltaY);
+        		} else {
+        			delta = event.wheelDelta * wheelSense / Math.abs(event.wheelDelta);
+        		}
         	} else {
-        		delta = event.wheelDelta * wheelSense / Math.abs(event.wheelDelta);
+        		if((typeof event.wheelDelta === 'number') && isFinite(event.wheelDelta)) {
+        			delta = event.wheelDelta * wheelSense / Math.abs(event.wheelDelta);
+        		} else if((typeof event.deltaX === 'number') && isFinite(event.deltaX) && event.deltaX !== 0) {
+        			delta = -event.deltaX * wheelSense / Math.abs(event.deltaX);
+        		} else {
+        			delta = -event.deltaY * wheelSense / Math.abs(event.deltaY);
+        		}
         	}
 
         	scroll(delta);
