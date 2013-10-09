@@ -206,7 +206,7 @@ var WowScroll = {
 			container[0].ontouchstart = function(event) { 
 				if(event.touches.length == 1) {
                 	event.preventDefault();
-                	event.stopPropagation();
+                	event.stopImmediatePropagation();
                     touch(event);
                 } else {
                 	return true;
@@ -220,6 +220,8 @@ var WowScroll = {
 
         if(container.selector === "body") {
 			$(window).resize(updateBodyScroll);
+			document.addEventListener('gestureend', updateBodyScroll);
+			document.addEventListener('orientationchange', updateBodyScroll);
 		}
 
         function wheel(event) {
