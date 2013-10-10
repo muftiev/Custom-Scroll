@@ -1,14 +1,14 @@
-jQuery.fn.wowscroll = function(options) {
+jQuery.fn.customscroll = function(options) {
 	var ua = navigator.userAgent.toLowerCase(),
 		isAndroid = ua.indexOf("android") > -1,
-		WowScrollObj = inherit(WowScroll);
+		CustomScrollObj = inherit(CustomScroll);
 
 	if(isAndroid) return false;
 
-	WowScrollObj.init(options);
-	WowScrollObj.build(this);
-	WowScrollObj.drawThumb();
-	WowScrollObj.setEvents();
+	CustomScrollObj.init(options);
+	CustomScrollObj.build(this);
+	CustomScrollObj.drawThumb();
+	CustomScrollObj.setEvents();
 
 	function inherit(proto) {
 		function F() {}
@@ -17,7 +17,7 @@ jQuery.fn.wowscroll = function(options) {
 	}
 }
 
-var WowScroll = {
+var CustomScroll = {
 	axis: "y",
 	wheelSense: 120,
 	wheelEnabled: true,
@@ -63,17 +63,17 @@ var WowScroll = {
 
 		container.empty();
 		contentWrap = $("<div/>")
-			.addClass("wowscroll-content-wrap")
+			.addClass("customscroll-content-wrap")
 			.addClass(axisClass)
 			.appendTo(container);
 
 		contentBlock = $("<div/>")
-			.addClass("wowscroll-content")
+			.addClass("customscroll-content")
 			.append(content)
 			.appendTo(contentWrap);
 
 		scrollbar = $("<div/>")
-			.addClass("wowscroll-scrollbar")
+			.addClass("customscroll-scrollbar")
 			.appendTo(contentWrap);
 
 		if(self.hide) {
@@ -111,10 +111,10 @@ var WowScroll = {
 			.addClass("thumb")
 			.appendTo(track);	
 
-		if(self.touchEvents && $("body>.wowscroll-tap").length === 0) {
+		if(self.touchEvents && $("body>.customscroll-tap").length === 0) {
 			$("<img/>")
 				.attr({"src": "img/tap.png", "alt": "tap"})
-				.addClass("wowscroll-tap")
+				.addClass("customscroll-tap")
 				.appendTo("body");
 		}
 
@@ -295,8 +295,8 @@ var WowScroll = {
         function touch(event) {
         	self.startPosition = axis ? event.pageX : event.pageY;        	
         	self.touchStartId = setTimeout(function() {
-        		$("body>.wowscroll-tap").css({"left": event.pageX-25, "top": event.pageY-25}).show(0);
-        		$("body>.wowscroll-tap").animate({
+        		$("body>.customscroll-tap").css({"left": event.pageX-25, "top": event.pageY-25}).show(0);
+        		$("body>.customscroll-tap").animate({
         			width: 100,
         			left: event.pageX-50,
         			top: event.pageY-50
@@ -314,7 +314,7 @@ var WowScroll = {
     				dragTouch(event);
     			} else {
     				clearTimeout(self.touchStartId);
-    				$("body>.wowscroll-tap").stop().hide(0).css("width", 50);
+    				$("body>.customscroll-tap").stop().hide(0).css("width", 50);
     				dragThumb(event)
     			}
     			self.touchStartId = null;
@@ -361,7 +361,7 @@ var WowScroll = {
             	clearTimeout(self.touchStartId);
             }
 
-            $("body>.wowscroll-tap").stop().hide(0).css("width", 50);
+            $("body>.customscroll-tap").stop().hide(0).css("width", 50);
             $("body").removeClass("unselectable");
             scrollbar.css("opacity", "");
         }

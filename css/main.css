@@ -71,7 +71,7 @@ body {
    =================== */
 
 body {
-    background-image: url('img/bg.jpg');
+    background-image: url('../img/bg.jpg');
     background-color: rgba(54, 255, 36, 0.9);
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -85,22 +85,22 @@ body {
 }
 
 .footer-container,
-.main aside {
+.sidebar {
     border-top: 20px solid #e44d26;
 }
 
 .header-container,
 .footer-container,
-.main aside {
+.sidebar {
     background: rgba(107, 115, 206, 0.8);
     border: none;
 }
 
-.title {
+.header-container .title {
     color: white;
 }
 
-.main article {
+.main-content {
     background: rgba(255,255,255,0.6);
 }
 
@@ -112,11 +112,11 @@ body {
     padding: 30px 0 120px 0;
 }
 
-.main article h1 {
+.main-content .content-title {
     font-size: 2em;
 }
 
-.main aside {
+.sidebar {
     color: white;
     padding: 0px 5% 10px;
 }
@@ -137,30 +137,30 @@ body {
    Author's custom styles
    ========================================================================== */
 
-.main article {
+.main-content {
     height: 500px;
     padding: 20px;
     overflow: hidden;   
 }
 
-.main aside {
+.sidebar {
     height: 200px;
     padding: 30px 5%;
     overflow: hidden;
 }
 
-.main aside ul {
+.sidebar-galery {
     margin: 0;
     padding: 0;
     list-style: none;
     font-size: 0;
 }
 
-.main aside ul li {
+.galery-item {
     display: inline-block;
 }
 
-.main aside ul li img {
+.galery-img {
     height: 200px;
 }
 
@@ -171,16 +171,12 @@ body {
 
 @media only screen and (min-width: 768px) {
 
-    .title {
-        float: left;
-    }
-
 /* ====================
     WIDE: CSS3 Effects
    ==================== */
 
     .header-container,
-    .main aside {
+    .sidebar {
         -webkit-box-shadow: 0 5px 10px rgb(0, 130, 0);
            -moz-box-shadow: 0 5px 10px rgb(0, 130, 0);
                 box-shadow: 0 5px 10px rgb(0, 130, 0);
@@ -190,12 +186,12 @@ body {
     WIDE: Main
    ============ */
 
-    .main article {
+    .main-content {
         float: left;
         width: 52%;
     }
 
-    .main aside {
+    .sidebar {
         float: right;
         width: 28%;
     }

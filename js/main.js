@@ -7,19 +7,19 @@ $(window).load(function() {
     });
     ulElem.width(ulWidth);
 
-    $("body").wowscroll({
+    $("body").customscroll({
         axis: "y",
         wheelSense: 20,
         arrows: true,
     });
 
-    $(".main article").wowscroll({
+    $(".main article").customscroll({
         axis: "y",
         wheelSense: 20,
         arrows: true,
     });
 
-    $(".main aside").wowscroll({
+    $(".main aside").customscroll({
         axis: "x",
         hide: true,
         arrows: false,
