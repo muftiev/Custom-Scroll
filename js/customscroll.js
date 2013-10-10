@@ -4,7 +4,7 @@ var CustomScroll = {
 	wheelEnabled: true,
 	hide: true,
 	scrollbarSize: "auto",
-	arrows: false,
+	arrows: true,
 
 	init: function(options) {
 		for (var prop in options) {
@@ -123,8 +123,8 @@ var CustomScroll = {
 
 		scrollbarSize = (!isNaN(parseFloat(scrollbarSize)) && isFinite(scrollbarSize) && (scrollbarSize < viewLength)) ? scrollbarSize : "auto";	
 		if(scrollbarSize !== "auto" && !isUpdate) {
-			scrollbarSize = (scrollbarSize >= 20) ? scrollbarSize : 20;
-			scrollbarSize = (arrows && (scrollbarSize > (viewLength - 10))) ? viewLength - 10 : scrollbarSize;
+			scrollbarSize = (scrollbarSize >= 20) ? scrollbarSize : 20;		// min scrollbar lenth 20px
+			scrollbarSize = (arrows && (scrollbarSize > (viewLength - 10))) ? viewLength - 10 : scrollbarSize;	// 5px for each arrow button
 		} else {
 			scrollbarSize = (arrows) ? viewLength - 10 : viewLength;
 		}
@@ -149,7 +149,7 @@ var CustomScroll = {
 			prop = (axis) ? "width" : "height";
 
 		thumbLength = scrollbarScale * scrollbarSize;
-		if(thumbLength < 5) {
+		if(thumbLength < 5) {	// min thumb length 5px
 			thumbLength = 5;
 			scrollbarScale = (scrollbarSize - thumbLength) / (self.contentLength - viewLength);
 		} else {
@@ -174,7 +174,7 @@ var CustomScroll = {
 			touchEvents = self.touchEvents;
 
 		if(self.wheelEnabled) {
-			container[0].addEventListener('wheel', wheel, false);
+			container[0].addEventListener('wheel', wheel, false);		// for Firefox
 			container[0].addEventListener('mousewheel', wheel, false);
 		}
 
@@ -182,7 +182,7 @@ var CustomScroll = {
 			arrowHome[0].addEventListener('click', function() { scroll(wheelSense); }, false);
 			arrowEnd[0].addEventListener('click', function() { scroll(-wheelSense); }, false);
 
-			arrowHome[0].addEventListener('mousedown', arrowsFast, false);
+			arrowHome[0].addEventListener('mousedown', arrowsFast, false);	// scrolling until mouseup
 			arrowEnd[0].addEventListener('mousedown', arrowsFast, false);
 
 			arrowHome[0].addEventListener('mouseup', function() { clearInterval(self.intervalId); }, false);
@@ -190,11 +190,11 @@ var CustomScroll = {
 		}
 
 		if(touchEvents) {
-			self.dragTouchMode = false;
+			self.dragTouchMode = false;		// drag mode flag
 			self.touchStartId = null;
 
 			container[0].ontouchstart = function(event) { 
-				if(event.touches.length == 1) {
+				if(event.touches.length == 1) {		// for more than 1 touches event - native behavior
 					event.preventDefault();
 					event.stopImmediatePropagation();
 					touch(event);
@@ -208,12 +208,15 @@ var CustomScroll = {
 
 		container.on('mouseenter', updateScroll);
 
-		if(container.selector === "body") {
+		if(container.selector === "body") {		// for body scroll more update cases
 			$(window).resize(updateBodyScroll);
 			document.addEventListener('gestureend', updateBodyScroll);
 			document.addEventListener('orientationchange', updateBodyScroll);
 		}
 
+		/**
+		* Mousewheel delta calculation
+		*/
 		function wheel(event) {
 			event.stopPropagation();
 			event.preventDefault();
@@ -224,7 +227,7 @@ var CustomScroll = {
 				if((typeof event.wheelDeltaY === 'number') && isFinite(event.wheelDeltaY)) {
 					delta = event.wheelDeltaY * wheelSense / Math.abs(event.wheelDeltaY);
 				} else if((typeof event.deltaY === 'number') && isFinite(event.deltaY)) {
-					delta = -event.deltaY * wheelSense / Math.abs(event.deltaY);
+					delta = -event.deltaY * wheelSense / Math.abs(event.deltaY);	// for Firefox
 				} else {
 					delta = event.wheelDelta * wheelSense / Math.abs(event.wheelDelta);
 				}
@@ -232,7 +235,7 @@ var CustomScroll = {
 				if((typeof event.wheelDelta === 'number') && isFinite(event.wheelDelta)) {
 					delta = event.wheelDelta * wheelSense / Math.abs(event.wheelDelta);
 				} else if((typeof event.deltaX === 'number') && isFinite(event.deltaX) && event.deltaX !== 0) {
-					delta = -event.deltaX * wheelSense / Math.abs(event.deltaX);
+					delta = -event.deltaX * wheelSense / Math.abs(event.deltaX);	// for Firefox
 				} else {
 					delta = -event.deltaY * wheelSense / Math.abs(event.deltaY);
 				}
@@ -241,11 +244,17 @@ var CustomScroll = {
 			scroll(delta);
 		}
 
+		/**
+		* Content and thumb scrolling function
+		*/
 		function scroll(delta) {
 			self.contentScroll(delta);
 			self.thumbScroll();
 		}
 
+		/**
+		* Grab the thumb by mouse event handler
+		*/
 		function grab(event) {
 			var thumbLength = self.thumbLength,
 				scrollbarSize = self.scrollbarSize,
@@ -269,6 +278,9 @@ var CustomScroll = {
 			scrollbar.css("opacity", 1);
 		}
 
+		/**
+		* Dragging thumb event handler
+		*/
 		function dragThumb(event) {
 			var startPosition = self.startPosition,
 				dragArea = self.dragArea,
@@ -287,28 +299,31 @@ var CustomScroll = {
 			self.startPosition = currentPosition;
 		}
 
+		/**
+		* Touch event handler
+		*/
 		function touch(event) {
 			self.startPosition = axis ? event.pageX : event.pageY;
-			self.touchStartId = setTimeout(function() {
+			self.touchStartId = setTimeout(function() {		// long touch detection
 				$("body>.customscroll-tap").css({"left": event.pageX-25, "top": event.pageY-25}).show(0);
-				$("body>.customscroll-tap").animate({
+				$("body>.customscroll-tap").animate({	// long touch animation
 					width: 100,
 					left: event.pageX-50,
 					top: event.pageY-50
 				}, 2000,
 				function() {
 					$(this).hide(0).css("width", 50);
-					self.dragTouchMode = true;
+					self.dragTouchMode = true;	// touch dragging mode enabled
 				});
 
 			}, 1000);
 
 			document.ontouchmove = function(event) {
 				event.stopImmediatePropagation();
-				if(self.dragTouchMode) {
+				if(self.dragTouchMode) {	// touch dragging mode case
 					dragTouch(event);
 				} else {
-					clearTimeout(self.touchStartId);
+					clearTimeout(self.touchStartId);	// prevent touch dragging mode enabling
 					$("body>.customscroll-tap").stop().hide(0).css("width", 50);
 					dragThumb(event);
 				}
@@ -318,9 +333,11 @@ var CustomScroll = {
 
 			$("body").addClass("unselectable");
 			scrollbar.css("opacity", 1);
-
 		}
 
+		/**
+		* Touch dragging mode
+		*/
 		function dragTouch(event) {
 			var startPosition = self.startPosition,
 				currentPosition = axis ? event.pageX : event.pageY,
@@ -338,10 +355,11 @@ var CustomScroll = {
 				}
 				self.startPosition = currentPosition;
 			}
-
-
 		}
 
+		/**
+		* Stop scrolling
+		*/
 		function release() {
 			$(document).unbind('mousemove', dragThumb);
 			$(document).unbind('mouseup', release);
@@ -361,6 +379,9 @@ var CustomScroll = {
 			scrollbar.css("opacity", "");
 		}
 
+		/**
+		* Arrow buttons mousedown scrolling
+		*/
 		function arrowsFast(event) {
 			var delta = $(event.target).hasClass("nav-home") ? wheelSense : -wheelSense;
 
@@ -370,6 +391,9 @@ var CustomScroll = {
 			$(document).bind('mouseup', arrowsFastStop);
 		}
 
+		/**
+		* Stop arrow buttons mousedown scrolling
+		*/
 		function arrowsFastStop() {
 			clearInterval(self.intervalId);
 
@@ -377,6 +401,9 @@ var CustomScroll = {
 			$(document).unbind('mouseup', arrowsFastStop);
 		}
 
+		/**
+		* Scroll recalculations
+		*/
 		function updateScroll(event) {
 			event.stopImmediatePropagation();
 
@@ -407,6 +434,9 @@ var CustomScroll = {
 			}
 		}
 
+		/**
+		* Body scroll recalculations
+		*/
 		function updateBodyScroll() {
 			var contentBlock = self.contentBlock,
 				contentWrap = self.contentWrap,
@@ -439,6 +469,9 @@ var CustomScroll = {
 		}
 	},
 
+	/**
+	* Content scrolling function
+	*/
 	contentScroll: function(delta) {
 		var self = this,
 			axis = self.axis,
@@ -457,6 +490,9 @@ var CustomScroll = {
 		contentBlock.css(prop, contentMove);
 	},
 
+	/**
+	* Thumb scrolling function
+	*/
 	thumbScroll: function() {
 		var self = this,
 			axis = self.axis,
