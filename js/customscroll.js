@@ -259,6 +259,8 @@ var CustomScroll = {
         		startPosition,
         		dragArea = {};
 
+        	event.preventDefault();
+        	
         	startPosition = axis ? event.pageX : event.pageY;
         	dragArea.from = axis ? event.pageX - parseFloat(thumb.css("margin-left")) : event.pageY - parseFloat(thumb.css("margin-top"));
         	dragArea.to = dragArea.from + (scrollbarSize - thumbLength);
