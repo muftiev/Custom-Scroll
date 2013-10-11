@@ -31,6 +31,8 @@ var CustomScroll = {
             scrollbar,
             track,
             thumb,
+            divElem = $("<div/>"),
+            buttonElem = $("<button/>"),
             axis = self.axis,
             arrows = self.arrows,
             arrowHome,
@@ -47,17 +49,17 @@ var CustomScroll = {
         }
 
         container.addClass("customscroll").empty();
-        contentWrap = $("<div/>")
+        contentWrap = divElem.clone()
             .addClass("customscroll-content-wrap")
             .addClass(axisClass)
             .appendTo(container);
 
-        contentBlock = $("<div/>")
+        contentBlock = divElem.clone()
             .addClass("customscroll-content")
             .append(content)
             .appendTo(contentWrap);
 
-        scrollbar = $("<div/>")
+        scrollbar = divElem.clone()
             .addClass("customscroll-scrollbar")
             .appendTo(contentWrap);
 
@@ -78,12 +80,12 @@ var CustomScroll = {
                 scrollbar.css("top", 5);
             }
 
-            arrowHome = $("<button/>")
+            arrowHome = buttonElem.clone()
                 .addClass("nav")
                 .addClass("nav-home")
                 .prependTo(scrollbar);
 
-            arrowEnd = $("<button/>")
+            arrowEnd = buttonElem.clone()
                 .addClass("nav")
                 .addClass("nav-end")
                 .appendTo(scrollbar);
@@ -92,11 +94,11 @@ var CustomScroll = {
             self.arrowEnd = arrowEnd;
         }
 
-        track = $("<div/>")
+        track = divElem.clone()
             .addClass("track")
             .appendTo(scrollbar);
 
-        thumb = $("<div/>")
+        thumb = divElem.clone()
             .addClass("thumb")
             .appendTo(track);
 
