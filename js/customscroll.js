@@ -46,7 +46,7 @@ var CustomScroll = {
             }
         }
 
-        container.empty();
+        container.addClass("customscroll").empty();
         contentWrap = $("<div/>")
             .addClass("customscroll-content-wrap")
             .addClass(axisClass)
@@ -222,17 +222,17 @@ var CustomScroll = {
             var delta;
 
             if(!axis) {
-                if((typeof event.wheelDeltaY === 'number') && isFinite(event.wheelDeltaY)) {
+                if((typeof event.wheelDeltaY === "number") && isFinite(event.wheelDeltaY)) {
                     delta = event.wheelDeltaY * wheelSense / Math.abs(event.wheelDeltaY);
-                } else if((typeof event.deltaY === 'number') && isFinite(event.deltaY)) {
+                } else if((typeof event.deltaY === "number") && isFinite(event.deltaY)) {
                     delta = -event.deltaY * wheelSense / Math.abs(event.deltaY);    // for Firefox
                 } else {
                     delta = event.wheelDelta * wheelSense / Math.abs(event.wheelDelta);
                 }
             } else {
-                if((typeof event.wheelDelta === 'number') && isFinite(event.wheelDelta)) {
+                if((typeof event.wheelDelta === "number") && isFinite(event.wheelDelta)) {
                     delta = event.wheelDelta * wheelSense / Math.abs(event.wheelDelta);
-                } else if((typeof event.deltaX === 'number') && isFinite(event.deltaX) && event.deltaX !== 0) {
+                } else if((typeof event.deltaX === "number") && isFinite(event.deltaX) && event.deltaX !== 0) {
                     delta = -event.deltaX * wheelSense / Math.abs(event.deltaX);    // for Firefox
                 } else {
                     delta = -event.deltaY * wheelSense / Math.abs(event.deltaY);
@@ -519,6 +519,7 @@ jQuery.fn.customscroll = function(options) {
         CustomScrollObj = inherit(CustomScroll);
 
     if(isAndroid) return false;
+    if(this.hasClass("customscroll")) return false;
 
     CustomScrollObj.init(options);
     CustomScrollObj.build(this);
