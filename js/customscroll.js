@@ -143,9 +143,7 @@ var CustomScroll = {
         self.contentLength = axis ? self.contentBlock.width() : self.contentBlock.height();
         self.scrollbarScale = (viewLength / self.contentLength);
 
-        if (self.scrollbarScale < 1) {
-            scrollbar.removeClass("disabled");
-        } else {
+        if (self.scrollbarScale >= 1) {
             scrollbar.addClass("disabled");
         }
     },
